@@ -15,30 +15,30 @@ defined('KOOWA') or die; ?>
 
         <table class="k-js-responsive-table">
             <thead>
-            <tr>
-                <th width="1%" class="k-table-data--form">
-                    <?= helper('grid.checkall')?>
-                </th>
-                <th width="1%" class="k-table-data--toggle" data-toggle="true"></th>
-                <th>
-                    <?= helper('grid.sort', array('column' => '_user.name', 'title' => 'Name')); ?>
-                </th>
-                <th width="5%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'status', 'title' => 'Status')); ?>
-                </th>
-                <th width="5%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'account_number', 'title' => 'Account Number')); ?>
-                </th>
-                <th width="10%" data-hide="phone,tablet">
-                    <?= translate('Sponsor') ?>
-                </th>
-                <th width="10%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'created_on', 'title' => 'Created')); ?>
-                </th>
-                <th width="10%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'modified_on', 'title' => 'Modified')); ?>
-                </th>
-            </tr>
+                <tr>
+                    <th width="1%" class="k-table-data--form">
+                        <?= helper('grid.checkall')?>
+                    </th>
+                    <th width="1%" class="k-table-data--toggle" data-toggle="true"></th>
+                    <th>
+                        <?= helper('grid.sort', array('column' => '_user.name', 'title' => 'Name')); ?>
+                    </th>
+                    <th width="5%" data-hide="phone,tablet">
+                        <?= helper('grid.sort', array('column' => 'status', 'title' => 'Status')); ?>
+                    </th>
+                    <th width="5%" data-hide="phone,tablet">
+                        <?= helper('grid.sort', array('column' => 'account_number', 'title' => 'Account Number')); ?>
+                    </th>
+                    <th width="10%" data-hide="phone,tablet">
+                        <?= translate('Sponsor') ?>
+                    </th>
+                    <th width="10%" data-hide="phone,tablet">
+                        <?= helper('grid.sort', array('column' => 'created_on', 'title' => 'Created')); ?>
+                    </th>
+                    <th width="10%" data-hide="phone,tablet">
+                        <?= helper('grid.sort', array('column' => 'modified_on', 'title' => 'Modified')); ?>
+                    </th>
+                </tr>
             </thead>
             <tbody <?= parameters()->sort == 'ordering' ? 'data-behavior="orderable"' : '' ?>>
                 <? if (count($accounts)): ?>
@@ -63,7 +63,7 @@ defined('KOOWA') or die; ?>
                 <?php else: ?>
                     <tr>
                         <td colspan="7" align="center" style="text-align: center;">
-                            <?= translate('No accounts') ?>
+                            <?= translate('No member') ?>
                         </td>
                     </tr>
                 <? endif; ?>

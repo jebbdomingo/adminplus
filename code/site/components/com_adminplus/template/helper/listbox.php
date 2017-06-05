@@ -169,6 +169,32 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
     }
 
     /**
+     * Generates payout status list box
+     * 
+     * @param array $config [optional]
+     * 
+     * @return html
+     */
+    public function payoutStatus(array $config = array())
+    {
+        $options = array();
+
+        foreach (ComAdminplusTemplateHelperPayout::$payout_status_messages as $value => $label) {
+            $options[] = $this->option(array('label' => $label, 'value' => $value));
+        }
+
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'name'     => 'status',
+            'selected' => null,
+            'options'  => $options,
+            'filter'   => array()
+        ));
+
+        return parent::optionlist($config);
+    }
+
+    /**
      * Provides an accounts autocomplete select box.
      *
      * @param  array|KObjectConfig $config An optional configuration array.
@@ -186,5 +212,40 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
         ));
 
         return $this->_autocomplete($config);
+    }
+
+    /**
+     * Generates product list box
+     * 
+     * @param array $config [optional]
+     * 
+     * @return html
+     */
+    public function productList($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+
+        $items   = $this->getObject('com://admin/qbsync.model.items')->fetch();
+        $options = array();
+
+        foreach ($items as $item)
+        {
+            if (!in_array($item->Type, ComQbsyncModelEntityItem::$item_types)) {
+                continue;
+            }
+
+            $options[] = array('label' => "{$item->Name} | PHP {$item->UnitPrice} | ItemRef:{$item->ItemRef}", 'value' => $item->ItemRef);
+        }
+
+        $config->append(array(
+            'name'     => 'ItemRef',
+            'selected' => null,
+            'options'  => $options,
+            'filter'   => array(),
+            // 'select2'  => true,
+            // 'deselect' => true,
+        ));
+
+        return parent::optionlist($config);
     }
 }

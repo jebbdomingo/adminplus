@@ -24,6 +24,26 @@ class ComAdminplusDispatcherHttp extends ComKoowaDispatcherHttp
         $request = parent::getRequest();
         $request->query->tmpl = 'koowa';
 
+        if ($request->query->view == 'cart' && $request->query->customer)
+        {
+            $model = $this->getObject('com://admin/nucleonplus.model.carts');
+            $cart  = $model
+                ->customer($request->query->customer)
+                ->fetch()
+            ;
+
+            if (!count($cart))
+            {
+                $cart = $model->create(array('customer' => $request->query->customer));
+                $cart->save();
+
+                $id = $cart->id;
+            }
+            else $id = $cart->id;
+
+            $request->query->id = (int) $id;
+        }
+
         return $request;
     }
 

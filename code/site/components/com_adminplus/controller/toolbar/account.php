@@ -26,8 +26,9 @@ class ComAdminplusControllerToolbarAccount extends ComKoowaControllerToolbarActi
 
     protected function _commandOrder(KControllerToolbarCommand $command)
     {
-        $command->icon  = 'k-icon-cart';
+        $command->icon  = 'k-icon-cart k-icon--success';
         $command->label = 'Create Order';
+
     }
 
     protected function _afterRead(KControllerContextInterface $context)
