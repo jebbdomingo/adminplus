@@ -8,21 +8,10 @@
 defined('KOOWA') or die; ?>
 
 <div class="k-js-filters k-dynamic-content-holder">
-    <div data-filter data-title="<?= translate('Member'); ?>"
-         data-count="<?= (!is_null(parameters()->account_id)) ? 1 : 0 ?>"
-    >
-        <?= helper('listbox.users', array(
-            'name'     => 'account_id',
-            'select2'  => true,
-            'selected' => parameters()->account_id,
-            'deselect' => true,
-            'prompt'   => '- Select -',
-        )) ?>
-    </div>
     <div data-filter data-title="<?= translate('Status'); ?>"
          data-count="<?= (!is_null(parameters()->status)) ? 1 : 0 ?>"
     >
-        <?= helper('listbox.payoutStatus', array(
+        <?= helper('listbox.productStatus', array(
             'name'     => 'status',
             'select2'  => true,
             'selected' => parameters()->status,

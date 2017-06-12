@@ -17,6 +17,9 @@ defined('KOOWA') or die; ?>
             <li class="<?= parameters()->view === 'accounts' && parameters()->layout === 'default' ? 'k-is-active' : null ?>">
                 <a href="<?= route('view=accounts') ?>"><?= translate('Accounts') ?></a>
             </li>
+            <li class="<?= parameters()->view === 'products' ? 'k-is-active' : null ?>">
+                <a href="<?= route('view=products') ?>"><?= translate('Products') ?></a>
+            </li>
             <li class="<?= parameters()->view === 'orders' ? 'k-is-active' : null ?>">
                 <a href="<?= route('view=orders') ?>"><?= translate('Orders') ?></a>
             </li>

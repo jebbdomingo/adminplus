@@ -8,7 +8,18 @@
 defined('KOOWA') or die; ?>
 
 <div class="k-js-filters k-dynamic-content-holder">
-    <div data-filter data-title="<?= translate('Order Status'); ?>"
+    <div data-filter data-title="<?= translate('Member'); ?>"
+         data-count="<?= (!is_null(parameters()->account_id)) ? 1 : 0 ?>"
+    >
+        <?= helper('listbox.users', array(
+            'name'     => 'account_id',
+            'select2'  => true,
+            'selected' => parameters()->account_id,
+            'deselect' => true,
+            'prompt'   => '- Select -',
+        )) ?>
+    </div>
+    <div data-filter data-title="<?= translate('Order status'); ?>"
          data-count="<?= (!is_null(parameters()->order_status)) ? 1 : 0 ?>"
     >
         <?= helper('listbox.orderStatus', array(
@@ -19,13 +30,13 @@ defined('KOOWA') or die; ?>
             'prompt'   => '- Select -',
         )) ?>
     </div>
-    <div data-filter data-title="<?= translate('Member'); ?>"
-         data-count="<?= (!is_null(parameters()->account_id)) ? 1 : 0 ?>"
+    <div data-filter data-title="<?= translate('Payment method'); ?>"
+         data-count="<?= (!is_null(parameters()->payment_method)) ? 1 : 0 ?>"
     >
-        <?= helper('listbox.users', array(
-            'name'     => 'account_id',
+        <?= helper('listbox.paymentMethod', array(
+            'name'     => 'payment_method',
             'select2'  => true,
-            'selected' => parameters()->account_id,
+            'selected' => parameters()->payment_method,
             'deselect' => true,
             'prompt'   => '- Select -',
         )) ?>
@@ -67,7 +78,10 @@ defined('KOOWA') or die; ?>
 
     <!-- Search -->
     <div class="k-scopebar__item k-scopebar__item--search">
-        <?= helper('grid.search', array('submit_on_clear' => true)) ?>
+        <?= helper('grid.search', array(
+            'submit_on_clear' => true,
+            'placeholder'     => object('translator')->translate('Find by order #')
+        )) ?>
     </div><!-- .k-scopebar__item--search -->
 
 </div><!-- .k-scopebar -->

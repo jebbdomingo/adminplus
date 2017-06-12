@@ -29,8 +29,8 @@ defined('KOOWA') or die; ?>
         <!-- Content -->
         <div class="k-content k-js-content">
 
-            <!-- Title when sidebar is invisible -->
-            <ktml:toolbar type="titlebar" title="Admin Plus" mobile>
+            <!-- Title -->
+            <ktml:toolbar type="titlebar" title="<?= $account->_name ?>">
 
             <!-- Component -->
             <div class="k-component-wrapper">

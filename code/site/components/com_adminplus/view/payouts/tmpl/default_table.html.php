@@ -37,7 +37,7 @@ defined('KOOWA') or die; ?>
                 <th width="5%">
                     <?= helper('grid.sort', array('column' => 'created_on', 'title' => 'Date')); ?>
                 </th>
-                <th width="10%">
+                <th width="10%" class="k-table-data--right">
                     <?= helper('grid.sort', array('column' => 'total', 'title' => 'Amount')); ?>
                 </th>
             </tr>
@@ -63,12 +63,12 @@ defined('KOOWA') or die; ?>
                                 </a>
                             </td>
                             <td class="k-table-data--nowrap"><?= helper('date.humanize', array('date' => $payout->created_on)) ?></td>
-                            <td>&#8369;<?= number_format($payout->amount, 2) ?></td>
+                            <td class="k-table-data--right">&#8369;<?= number_format($payout->amount, 2) ?></td>
                         </tr>
                     <? endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" align="center" style="text-align: center;">
+                        <td colspan="8" class="k-table-data--center">
                             <?= translate('No payout') ?>
                         </td>
                     </tr>

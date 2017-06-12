@@ -30,7 +30,7 @@ defined('KOOWA') or die; ?>
         <div class="k-content k-js-content">
 
             <!-- Title when sidebar is invisible -->
-            <ktml:toolbar type="titlebar" title="Admin Plus" mobile>
+            <ktml:toolbar type="titlebar" title="<?= $account->_name ?>" mobile>
 
             <!-- Toolbar -->
             <ktml:toolbar type="actionbar">
@@ -45,7 +45,7 @@ defined('KOOWA') or die; ?>
                         <table>
                             <tbody>
                                 <tr>
-                                    <td>Name</td>
+                                    <td width="20%">Name</td>
                                     <td><?= $account->_name ?></td>
                                 </tr>
                                 <tr>

@@ -36,22 +36,12 @@ defined('KOOWA') or die; ?>
         <ul class="k-list">
             <li class="<?= empty(parameters()->created_by) && (parameters()->sort === 'created_on' && parameters()->direction === 'desc') ? 'k-is-active' : ''; ?>">
                 <?
-                $url = 'view=accounts&';
+                $url = 'view=products&';
                 $url .= parameters()->sort === 'created_on' && parameters()->direction === 'desc' ? 'sort=&direction=&created_by=' : 'sort=created_on&direction=desc&created_by='
                 ?>
                 <a href="<?= route($url) ?>">
                     <span class="k-icon-clock" aria-hidden="true"></span>
                     <?= translate('Recently created') ?>
-                </a>
-            </li>
-            <li class="<?= empty(parameters()->modified_by) && (parameters()->sort === 'modified_on' && parameters()->direction === 'desc') ? 'k-is-active' : ''; ?>">
-                <?
-                $url = 'view=accounts&';
-                $url .= parameters()->sort === 'modified_on' && parameters()->direction === 'desc' ? 'sort=&direction=&modified_by=' : 'sort=modified_on&direction=desc&modified_by=';
-                ?>
-                <a href="<?= route($url) ?>">
-                    <span class="k-icon-pencil" aria-hidden="true"></span>
-                    <?= translate('Recently modified') ?>
                 </a>
             </li>
         </ul>

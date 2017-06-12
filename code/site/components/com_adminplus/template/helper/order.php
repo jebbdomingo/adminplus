@@ -40,4 +40,9 @@ class ComAdminplusTemplateHelperOrder extends KTemplateHelperUi
         self::INVOICE_STATUS_SENT => 'Sent',
         self::INVOICE_STATUS_PAID => 'Paid',
     );
+
+    public static $payment_method_messages = array(
+        self::PAYMENT_METHOD_CASH      => 'Cash',
+        self::PAYMENT_METHOD_DRAGONPAY => 'Dragonpay',
+    );
 }

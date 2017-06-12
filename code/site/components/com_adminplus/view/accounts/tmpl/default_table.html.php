@@ -62,7 +62,7 @@ defined('KOOWA') or die; ?>
                     <? endforeach; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="7" align="center" style="text-align: center;">
+                        <td colspan="8" class="k-table-data--right">
                             <?= translate('No member') ?>
                         </td>
                     </tr>

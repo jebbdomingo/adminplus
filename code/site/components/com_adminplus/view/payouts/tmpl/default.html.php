@@ -32,7 +32,7 @@ defined('KOOWA') or die; ?>
         <div class="k-content k-js-content">
 
             <!-- Title when sidebar is invisible -->
-            <ktml:toolbar type="titlebar" title="Nucleon Plus Admin" mobile>
+            <ktml:toolbar type="titlebar" title="Payouts" mobile>
 
             <!-- Toolbar -->
             <ktml:toolbar type="actionbar">

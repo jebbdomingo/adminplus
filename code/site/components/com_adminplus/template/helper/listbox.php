@@ -248,4 +248,78 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
 
         return parent::optionlist($config);
     }
+
+    /**
+     * Generates payment method list box
+     * 
+     * @param array $config [optional]
+     * 
+     * @return html
+     */
+    public function paymentMethod(array $config = array())
+    {
+        $options = array();
+
+        foreach (ComAdminplusTemplateHelperOrder::$payment_method_messages as $value => $label) {
+            $options[] = $this->option(array('label' => $label, 'value' => $value));
+        }
+
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'name'     => 'payment_method',
+            'selected' => null,
+            'options'  => $options,
+            'filter'   => array()
+        ));
+
+        if($config->select2 && !$config->searchable)
+        {
+            $config->append(array(
+                'select2_options' => array(
+                    'options' => array(
+                        'minimumResultsForSearch' => 'Infinity'
+                    )
+                )
+            ));
+        }
+
+        return parent::optionlist($config);
+    }
+
+    /**
+     * Generates product status list box
+     * 
+     * @param array $config [optional]
+     * 
+     * @return html
+     */
+    public function productStatus(array $config = array())
+    {
+        $options = array();
+
+        foreach (ComAdminplusTemplateHelperProduct::$status_messages as $value => $label) {
+            $options[] = $this->option(array('label' => $label, 'value' => $value));
+        }
+
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'name'     => 'status',
+            'selected' => null,
+            'options'  => $options,
+            'filter'   => array()
+        ));
+
+        if($config->select2 && !$config->searchable)
+        {
+            $config->append(array(
+                'select2_options' => array(
+                    'options' => array(
+                        'minimumResultsForSearch' => 'Infinity'
+                    )
+                )
+            ));
+        }
+
+        return parent::optionlist($config);
+    }
 }
