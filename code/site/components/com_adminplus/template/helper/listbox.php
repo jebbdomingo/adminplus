@@ -305,8 +305,9 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
         $config->append(array(
             'name'     => 'status',
             'selected' => null,
-            'options'  => $options,
-            'filter'   => array()
+            'select2'  => true,
+            'filter'   => array(),
+            'options'  => $options
         ));
 
         if($config->select2 && !$config->searchable)

@@ -29,7 +29,7 @@ defined('KOOWA') or die; ?>
                     <th width="5%" data-hide="phone,tablet">
                         <?= helper('grid.sort', array('column' => 'account_number', 'title' => 'Account Number')); ?>
                     </th>
-                    <th width="10%" data-hide="phone,tablet">
+                    <th width="15%" data-hide="phone,tablet">
                         <?= translate('Sponsor') ?>
                     </th>
                     <th width="10%" data-hide="phone,tablet">

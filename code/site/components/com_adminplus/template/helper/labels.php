@@ -59,4 +59,39 @@ class ComAdminplusTemplateHelperLabels extends KTemplateHelperAbstract
 
         return $html;
     }
+
+    /**
+     * Product status
+     *
+     * @param mixed $config
+     *
+     * @return string
+     */
+    public function productStatus(array $config = array())
+    {
+        $config = new KObjectConfig($config);
+        $config->append(array(
+            'value' => null
+        ));
+
+        switch ($config->value) {
+            case ComAdminplusTemplateHelperProduct::STATUS_ACTIVE:
+                $state = 'success';
+                break;
+
+            case ComAdminplusTemplateHelperProduct::STATUS_INACTIVE:
+                $state = 'error';
+                break;
+
+            default:
+                $state = 'accent';
+                break;
+        }
+
+        $label = ComAdminplusTemplateHelperProduct::$status_messages[$config->value];
+        $html  = '<span class="k-icon-badge k-icon--' . $state . '" aria-hidden="true"></span>';
+        $html  .= "<span>{$label}</span>";
+
+        return $html;
+    }
 }

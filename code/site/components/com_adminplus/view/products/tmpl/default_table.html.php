@@ -23,7 +23,7 @@ defined('KOOWA') or die; ?>
                 <th>
                     <?= helper('grid.sort', array('column' => 'Name', 'title' => 'Name')); ?>
                 </th>
-                <th width="5%" data-hide="phone,tablet">
+                <th width="10%" data-hide="phone,tablet">
                     <?= helper('grid.sort', array('column' => 'status', 'title' => 'Status')); ?>
                 </th>
                 <th width="5%" data-hide="phone,tablet">
@@ -46,11 +46,11 @@ defined('KOOWA') or die; ?>
                             </td>
                             <td class="k-table-data--toggle"></td>
                             <td class="k-table-data--ellipsis">
-                                <a data-k-tooltip='{"container":".k-ui-container","delay":{"show":500,"hide":50}}' data-original-title="<?= translate('View {title}', array('title' => escape($product->Name))); ?>" href="<?= route('view=account&id='.$product->account_id); ?>">
+                                <a data-k-tooltip='{"container":".k-ui-container","delay":{"show":500,"hide":50}}' data-original-title="<?= translate('View {title}', array('title' => escape($product->Name))); ?>" href="<?= route('view=product&id='.$product->id); ?>">
                                         <?= escape($product->Name); ?>
                                 </a>
                             </td>
-                            <td><?= $product->status ?></td>
+                            <td><?= helper('labels.productStatus', array('value' => $product->status)) ?></td>
                             <td><?= $product->shipping_type ?></td>
                             <td class="k-table-data--right">&#8369;<?= number_format($product->UnitPrice, 2) ?></td>
                             <td class="k-table-data--right">&#8369;<?= number_format($product->PurchaseCost, 2) ?></td>
