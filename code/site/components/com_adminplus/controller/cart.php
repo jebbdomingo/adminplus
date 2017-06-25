@@ -237,7 +237,7 @@ class ComAdminplusControllerCart extends ComKoowaControllerModel
             'cart_id'    => $context->request->data->cart_id,
         );
 
-        $controller = $this->getObject('com://admin/nucleonplus.controller.order');
+        $controller = $this->getObject('com://site/adminplus.controller.order');
         $controller->add($data);
         
         $result = $controller->getResponse()->getMessages();

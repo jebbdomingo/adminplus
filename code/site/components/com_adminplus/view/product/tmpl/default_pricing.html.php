@@ -30,32 +30,32 @@ defined('KOOWA') or die; ?>
     </div>
 
     <div class="k-form-block__content k-js-form--pricing">
-        <div class="k-form-group">
-            <label for="PurchaseCost"><?= translate('Cost') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="PurchaseCost"><?= translate('Cost') ?></label>
             <input class="k-form-control" type="text" id="PurchaseCost" name="PurchaseCost" value="<?= $product->PurchaseCost ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="profit"><?= translate('Profit') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="profit"><?= translate('Profit') ?></label>
             <input class="k-form-control" type="text" id="profit" name="profit" value="<?= $product->profit ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="charges"><?= translate('System fee') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="charges"><?= translate('System fee') ?></label>
             <input class="k-form-control" type="text" id="charges" name="charges" value="<?= $product->charges ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="drpv"><?= translate('Direct referral') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="drpv"><?= translate('Direct referral') ?></label>
             <input class="k-form-control" type="text" id="drpv" name="drpv" value="<?= $product->drpv ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="irpv"><?= translate('Indirect referral') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="irpv"><?= translate('Indirect referral') ?></label>
             <input class="k-form-control" type="text" id="irpv" name="irpv" value="<?= $product->irpv ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="rebates"><?= translate('Rebates') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="rebates"><?= translate('Rebates') ?></label>
             <input class="k-form-control" type="text" id="rebates" name="rebates" value="<?= $product->rebates ?>" />
         </div>
-        <div class="k-form-group">
-            <label for="stockist"><?= translate('Stockist') ?></label>
+        <div class="k-input-group">
+            <label style="width: 35%; text-align: left" class="k-input-group__addon" for="stockist"><?= translate('Stockist') ?></label>
             <input class="k-form-control" type="text" id="stockist" name="stockist" value="<?= $product->stockist ?>" />
         </div>
     </div>

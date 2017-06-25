@@ -14,5 +14,7 @@ class ComAdminplusControllerProduct extends ComKoowaControllerModel
     {
         $service = $this->getObject('com://admin/qbsync.quickbooks.service');
         $service->sync();
+
+        return true;
     }
 }

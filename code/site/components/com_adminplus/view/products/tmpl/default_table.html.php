@@ -27,13 +27,16 @@ defined('KOOWA') or die; ?>
                     <?= helper('grid.sort', array('column' => 'status', 'title' => 'Status')); ?>
                 </th>
                 <th width="5%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'shipping_type', 'title' => 'Shipping Type')); ?>
+                    <?= helper('grid.sort', array('column' => 'shipping_type', 'title' => 'Shipping type')); ?>
                 </th>
                 <th width="2%" data-hide="phone,tablet" class="k-table-data--right">
-                    <?= helper('grid.sort', array('column' => 'UnitPrice', 'title' => 'Unit price')); ?>
+                    <?= helper('grid.sort', array('column' => 'QtyOnHand', 'title' => 'Qty.')); ?>
                 </th>
                 <th width="2%" data-hide="phone,tablet" class="k-table-data--right">
-                    <?= helper('grid.sort', array('column' => 'PurchaseCost', 'title' => 'Purchase cost')); ?>
+                    <?= helper('grid.sort', array('column' => 'PurchaseCost', 'title' => 'Cost')); ?>
+                </th>
+                <th width="2%" data-hide="phone,tablet" class="k-table-data--right">
+                    <?= helper('grid.sort', array('column' => 'UnitPrice', 'title' => 'Price')); ?>
                 </th>
             </tr>
             </thead>
@@ -52,8 +55,9 @@ defined('KOOWA') or die; ?>
                             </td>
                             <td><?= helper('labels.productStatus', array('value' => $product->status)) ?></td>
                             <td><?= $product->shipping_type ?></td>
-                            <td class="k-table-data--right">&#8369;<?= number_format($product->UnitPrice, 2) ?></td>
+                            <td class="k-table-data--right"><?= $product->QtyOnHand ?></td>
                             <td class="k-table-data--right">&#8369;<?= number_format($product->PurchaseCost, 2) ?></td>
+                            <td class="k-table-data--right">&#8369;<?= number_format($product->UnitPrice, 2) ?></td>
                         </tr>
                     <? endforeach; ?>
                 <?php else: ?>

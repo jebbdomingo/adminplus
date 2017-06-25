@@ -103,6 +103,7 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 'com://admin/nucleonplus.controller.behavior.processable',
                 'com://admin/nucleonplus.controller.behavior.shippable',
                 'com:xend.controller.behavior.shippable',
+                'accountable',
             ),
         ));
 
@@ -432,7 +433,7 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
              * @todo Move accounting operation to com:qbsync behavior
              */
             // Record sale in accounting
-            $this->_salesreceipt_service->recordSale($order);
+            // $this->_salesreceipt_service->recordSale($order);
 
             // Automatically activate reward
             $this->_activateReward($order);
