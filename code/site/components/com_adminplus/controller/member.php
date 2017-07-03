@@ -26,6 +26,25 @@ class ComAdminplusControllerMember extends ComKoowaControllerModel
     }
 
     /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'behaviors' => array(
+                'customersyncable',
+            ),
+        ));
+
+        parent::_initialize($config);
+    }
+
+    /**
      * Validate sponsor id
      *
      * @param KControllerContextInterface $context

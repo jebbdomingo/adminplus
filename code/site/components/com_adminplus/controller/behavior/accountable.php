@@ -37,7 +37,7 @@ class ComAdminplusControllerBehaviorAccountable extends KControllerBehaviorAbstr
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $data = $this->getObject('com:nucleonplus.accounting.service.data');
+        $data = $this->getObject('com://admin/nucleonplus.accounting.service.data');
 
         $config->append(array(
             'department_ref'               => $data->store_angono,
@@ -124,8 +124,9 @@ class ComAdminplusControllerBehaviorAccountable extends KControllerBehaviorAbstr
 
         $salesreceipt['lines'] = $lines;
 
-        $this->getObject('com:qbsync.service.salesreceipt')->create($salesreceipt);
-
+        $resp = $this->getObject('com:qbsync.service.salesreceipt')->create($salesreceipt);
+        $order->SalesReceiptRef = $resp;
+        $order->save();
 
         // Allocation parts of sale
         foreach ($order->getRewards() as $reward)

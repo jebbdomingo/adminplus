@@ -71,7 +71,7 @@ class ComAdminplusControllerBehaviorPersistable extends ComKoowaControllerBehavi
 
             $this->_persistEntity($context);
 
-            $context->getResponse()->setRedirect($context->request->getReferrer(), $exception->getMessage(), 'error');
+            $context->getResponse()->setRedirect($context->request->getReferrer(), $exception->getMessage(), KControllerResponse::FLASH_ERROR);
             $context->getResponse()->send();
         }
     }
