@@ -8,13 +8,17 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComAdminplusControllerProduct extends ComKoowaControllerModel
+class ComAdminplusControllerAccount extends ComKoowaControllerModel
 {
-    // protected function _actionSync(KControllerContextInterface $context)
-    // {
-    //     $service = $this->getObject('com://admin/qbsync.quickbooks.service');
-    //     $service->sync();
-
-    //     return true;
-    // }
+    /**
+     * Constructor
+     *
+     * @param KObjectConfig $config
+     */
+    public function __construct(KObjectConfig $config)
+    {
+        @ini_set('max_execution_time', 300);
+        
+        parent::__construct($config);
+    }
 }

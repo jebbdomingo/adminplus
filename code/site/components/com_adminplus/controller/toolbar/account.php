@@ -66,7 +66,7 @@ class ComAdminplusControllerToolbarAccount extends ComKoowaControllerToolbarActi
         if ($controller->isEditable() && $controller->canSave() && !in_array($context->result->status, array('new', 'pending'))) {
             $this->addCommand('order', [
                 'allowed' => $allowed,
-                'href' => 'view=cart&customer=' . $context->result->id
+                'href'    => 'view=cart&customer=' . $context->result->id
             ]);
         }
 

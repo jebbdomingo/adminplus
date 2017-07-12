@@ -32,7 +32,7 @@ defined('KOOWA') or die; ?>
     <div class="k-form-block__content k-js-form--pricing">
         <div class="k-input-group">
             <label style="width: 35%; text-align: left" class="k-input-group__addon" for="PurchaseCost"><?= translate('Cost') ?></label>
-            <input class="k-form-control" type="text" id="PurchaseCost" name="PurchaseCost" value="<?= $product->PurchaseCost ?>" />
+            <input class="k-form-control" type="text" id="PurchaseCost" name="PurchaseCost" value="<?= $product->PurchaseCost ?>" <?= $product->isNew() ? null : 'disabled="disabled"' ?> />
         </div>
         <div class="k-input-group">
             <label style="width: 35%; text-align: left" class="k-input-group__addon" for="profit"><?= translate('Profit') ?></label>

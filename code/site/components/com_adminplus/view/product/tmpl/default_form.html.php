@@ -16,7 +16,7 @@
     </div>
     <div class="k-form-group">
         <label for="QtyOnHand"><?= translate('Quantity') ?></label>
-        <input class="k-form-control" type="text" id="QtyOnHand" name="QtyOnHand" value="<?= $product->QtyOnHand ?>" />
+        <input class="k-form-control" type="text" id="QtyOnHand" name="QtyOnHand" value="<?= $product->QtyOnHand ?>" <?= $product->isNew() ? null : 'disabled="disabled"' ?> />
     </div>
     <div class="k-form-group">
         <label for="Description"><?= translate('Intro text') ?></label>

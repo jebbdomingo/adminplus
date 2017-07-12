@@ -23,6 +23,7 @@ class ComAdminplusControllerMember extends ComKoowaControllerModel
 
         $this->addCommandCallback('before.add', '_validateSponsorId');
         $this->addCommandCallback('before.edit', '_validateSponsorId');
+        $this->addCommandCallback('after.delete', '_setRedirect');
     }
 
     /**
@@ -42,6 +43,20 @@ class ComAdminplusControllerMember extends ComKoowaControllerModel
         ));
 
         parent::_initialize($config);
+    }
+
+    /**
+     * Redirect callback
+     *
+     * @param KControllerContextInterface $context
+     * @return void
+     */
+    protected function _setRedirect(KControllerContextInterface $context)
+    {
+        $identifier = $context->getSubject()->getIdentifier();
+        $url        = JRoute::_(sprintf('index.php?option=com_%s', $identifier->package), false);
+
+        $context->response->setRedirect($url);
     }
 
     /**
@@ -76,7 +91,7 @@ class ComAdminplusControllerMember extends ComKoowaControllerModel
 
                     if (count($account) == 0)
                     {
-                        throw new KControllerExceptionRequestInvalid($translator->translate('Invalid Sponsor ID'));
+                        throw new KControllerExceptionActionFailed($translator->translate('Invalid Sponsor ID'));
                         $result = false;
                     }
                 }
