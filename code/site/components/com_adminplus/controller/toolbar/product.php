@@ -60,7 +60,7 @@ class ComAdminplusControllerToolbarProduct extends ComKoowaControllerToolbarActi
         parent::_afterRead($context);
 
         if (!$context->result->isNew()) {
-            $context->response->addMessage('To add quantity and update cost, create a Purchase Order in QuickBooks Online', KControllerResponse::FLASH_NOTICE);
+            $context->response->addMessage('To add quantity and update the cost: Create a Purchase Order in QuickBooks Online', KControllerResponse::FLASH_NOTICE);
         }
     }
 }
