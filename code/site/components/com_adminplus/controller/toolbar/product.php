@@ -24,12 +24,11 @@ class ComAdminplusControllerToolbarProduct extends ComKoowaControllerToolbarActi
 
         $command->append(array(
             'attribs' => array(
-                'data-action'     => 'sync',
-                'data-novalidate' => 'novalidate'
+                'data-action' => 'sync',
             )
         ));
 
-        $command->label = 'Sync';
+        $command->label = 'Update inventory';
     }
 
     protected function _afterBrowse(KControllerContextInterface $context)

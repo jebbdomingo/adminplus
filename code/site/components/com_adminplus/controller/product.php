@@ -10,11 +10,21 @@
 
 class ComAdminplusControllerProduct extends ComKoowaControllerModel
 {
-    // protected function _actionSync(KControllerContextInterface $context)
-    // {
-    //     $service = $this->getObject('com://admin/qbsync.quickbooks.service');
-    //     $service->sync();
+    protected function _actionSync(KControllerContextInterface $context)
+    {
+        if (!$context->result instanceof KModelEntityInterface) {
+            $entities = $this->getModel()->fetch();
+        } else {
+            $entities = $context->result;
+        }
 
-    //     return true;
-    // }
+        if (count($entities))
+        {
+            foreach($entities as $entity) {
+                $entity->sync();
+            }
+        }
+
+        return $entities;
+    }
 }
