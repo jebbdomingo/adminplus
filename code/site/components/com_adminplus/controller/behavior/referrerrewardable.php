@@ -9,7 +9,7 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComAdminplusControllerBehaviorEncodable extends KControllerBehaviorAbstract
+class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehaviorAbstract
 {
     /**
      * Number of levels for direct referrals
@@ -81,7 +81,7 @@ class ComAdminplusControllerBehaviorEncodable extends KControllerBehaviorAbstrac
      *
      * @return void
      */
-    protected function encode($order)
+    public function encode($order)
     {
         $items = $order->getOrderItems();
 
@@ -101,7 +101,7 @@ class ComAdminplusControllerBehaviorEncodable extends KControllerBehaviorAbstrac
             {
                 // Record direct referral reward
                 $data = array(
-                    'item'    => $order->id,
+                    'item'    => $item->id,
                     'account' => $order->_account_sponsor_id,
                     'type'    => 'direct_referral', // Direct Referral
                     'points'  => $drPoints,

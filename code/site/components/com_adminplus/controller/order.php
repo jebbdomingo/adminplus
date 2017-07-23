@@ -105,7 +105,8 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 'com:xend.controller.behavior.shippable',
                 'accountable',
                 'rewardable',
-                'encodable',
+                'referralrewardable',
+                'rebatable',
             ),
         ));
 
