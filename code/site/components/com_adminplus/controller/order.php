@@ -104,6 +104,8 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 'com://admin/nucleonplus.controller.behavior.shippable',
                 'com:xend.controller.behavior.shippable',
                 'accountable',
+                'rewardable',
+                'encodable',
             ),
         ));
 
@@ -413,11 +415,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                     'quantity'   => $item->quantity,
                 ));
                 $orderItem->save();
-
-                // Create the reward
-                for ($i=0; $i < $orderItem->quantity; $i++) { 
-                    $rewardPackage->create($orderItem);
-                }
             }
 
             // Calculate order totals based on order items
@@ -428,15 +425,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
              */
             // Delete the cart
             $cart->delete();
-
-            /**
-             * @todo Move accounting operation to com:qbsync behavior
-             */
-            // Record sale in accounting
-            // $this->_salesreceipt_service->recordSale($order);
-
-            // Automatically activate reward
-            $this->_activateReward($order);
 
             $context->response->addMessage('Order completed');
         }

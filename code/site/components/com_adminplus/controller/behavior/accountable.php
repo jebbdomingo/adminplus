@@ -53,7 +53,7 @@ class ComAdminplusControllerBehaviorAccountable extends KControllerBehaviorAbstr
     /**
      * Record sales transaction in the accounting system 
      *
-     * @param KModelEntityInterface $order
+     * @param KControllerContext $context
      *
      * @return void
      */
@@ -128,16 +128,10 @@ class ComAdminplusControllerBehaviorAccountable extends KControllerBehaviorAbstr
         $order->SalesReceiptRef = $resp;
         $order->save();
 
-        // Allocation parts of sale
-        foreach ($order->getRewards() as $reward)
+        foreach ($order->getOrderItems() as $item)
         {
-            if ($reward->type == ComNucleonplusModelEntityReward::REWARD_PACKAGE) {
-                $charges = $reward->charges * $reward->slots;
-            } else {
-                $charges = $reward->charges;
-            }
-
-            // $this->_transfer_service->allocateCharges($order->id, $charges);
+            $accounting = $this->getObject('com:nucleonplus.accounting.service.transfer');
+            $accounting->allocateCharges($item->id, $item->charges);
         }
     }
 }
