@@ -48,7 +48,8 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'controller' => 'com://admin/nucleonplus.controller.referralbonuses',
+            'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
+            'controller' => 'com://admin/nucleonplus.controller.rewards',
             'accounting' => 'com://admin/nucleonplus.accounting.service.transfer',
         ));
 
@@ -81,7 +82,7 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
             // Record rebates
             $data = array(
                 'item'    => $item->id,
-                'account' => $order->account_id,
+                'account' => $order->_account_number,
                 'type'    => 'rebates',
                 'points'  => $item->rebates,
             );

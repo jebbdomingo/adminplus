@@ -42,8 +42,8 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         parent::__construct($config);
 
         $this->_unilevel_count = $config->unilevel_count;
-        $this->_controller = $this->getObject($config->controller);
-        $this->_accounting = $this->getObject($config->accounting);
+        $this->_controller     = $this->getObject($config->controller);
+        $this->_accounting     = $this->getObject($config->accounting);
     }
 
     /**
@@ -56,8 +56,9 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
+            'priority'       => static::PRIORITY_LOW, // low priority so that rewardable runs first
             'unilevel_count' => 20,
-            'controller'     => 'com://admin/nucleonplus.controller.referralbonuses',
+            'controller'     => 'com://admin/nucleonplus.controller.rewards',
             'accounting'     => 'com://admin/nucleonplus.accounting.service.transfer',
         ));
 
@@ -87,15 +88,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
 
         foreach ($items as $item)
         {
-            $drPoints = $item->drpv;
-
             if (is_null($order->_account_sponsor_id))
             {
                 // No direct referrer sponsor, flushout direct and indirect referral bonus
-                $this->_accounting->allocateSurplusDRBonus($item->ItemRef, $drPoints);
-
-                $irPoints = $item->irpv * $this->_unilevel_count;
-                $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $irPoints);
+                $this->_accounting->allocateSurplusDRBonus($item->ItemRef, $item->drpv);
+                $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $item->irpv);
             }
             else
             {
@@ -104,7 +101,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                     'item'    => $item->id,
                     'account' => $order->_account_sponsor_id,
                     'type'    => 'direct_referral', // Direct Referral
-                    'points'  => $drPoints,
+                    'points'  => $item->drpv,
                 );
                 $this->_controller->add($data);
 
@@ -118,16 +115,12 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 ;
 
                 // Check if the first indirect referrer has sponsor as well
-                if (!$indirect_referrer->isNew())
+                if ($indirect_referrer->isNew())
                 {
-                    $this->_recordIndirectReferrals($indirect_referrer->account_number, $item);
+                    // There's a direct referrer sponsor but no indirect referrer sponsor, flushout indirect referral bonus
+                    $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $item->irpv);
                 }
-                else
-                {
-                    // There's direct referrer sponsor but no indirect referrer sponsor, flushout indirect referral bonus
-                    $irPoints = $item->irpv * $this->_unilevel_count;
-                    $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $irPoints);
-                }
+                else $this->_recordIndirectReferrals($indirect_referrer->account_number, $item);
             }
         }
     }

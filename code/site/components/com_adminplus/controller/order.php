@@ -21,23 +21,9 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
     /**
      * Sales Receipt Service
      *
-     * @var ComNucleonplusAccountingServiceSalesreceiptInterface
-     */
-    protected $_salesreceipt_service;
-
-    /**
-     * Sales Receipt Service
-     *
      * @var ComNucleonplusAccountingServiceInventoryInterface
      */
     protected $_inventory_service;
-
-    /**
-     * Reward controller identifier
-     *
-     * @var string
-     */
-    protected $_reward;
 
     /**
      * Constructor.
@@ -57,18 +43,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
         $this->addCommandCallback('before.markcompleted', '_validateCompleted');
         $this->addCommandCallback('before.cancelorder', '_validateCancelorder');
 
-        // Sales Receipt Service
-        $identifier = $this->getIdentifier($config->salesreceipt_service);
-        $service    = $this->getObject($identifier);
-
-        if (!($service instanceof ComNucleonplusAccountingServiceSalesreceiptInterface))
-        {
-            throw new UnexpectedValueException(
-                "Service $identifier does not implement ComNucleonplusAccountingServiceSalesreceiptInterface"
-            );
-        }
-        else $this->_salesreceipt_service = $service;
-
         // Inventory service
         $identifier = $this->getIdentifier($config->inventory_service);
         $service    = $this->getObject($identifier);
@@ -79,9 +53,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
             );
         }
         else $this->_inventory_service = $service;
-
-        // Reward service
-        $this->_reward = $config->reward;
     }
 
     /**
@@ -95,17 +66,15 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'salesreceipt_service' => 'com:nucleonplus.accounting.service.salesreceipt',
-            'inventory_service'    => 'com://admin/nucleonplus.accounting.service.inventory',
-            'reward'               => 'com:nucleonplus.mlm.packagereward',
-            'behaviors' => array(
+            'inventory_service' => 'com://admin/nucleonplus.accounting.service.inventory',
+            'behaviors'         => array(
                 'com://admin/nucleonplus.controller.behavior.cancellable',
                 'com://admin/nucleonplus.controller.behavior.processable',
                 'com://admin/nucleonplus.controller.behavior.shippable',
                 'com:xend.controller.behavior.shippable',
                 'accountable',
                 'rewardable',
-                'referralrewardable',
+                'referrerrewardable',
                 'rebatable',
             ),
         ));
@@ -402,8 +371,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
         {
             // Fetch newly created order to get the joined columns
             $order = $this->getObject('com://admin/nucleonplus.model.orders')->id($order->id)->fetch();
-
-            $rewardPackage = $this->getObject($this->_reward);
 
             foreach ($cart->getItems() as $item)
             {

@@ -25,21 +25,21 @@ class ComAdminplusViewAccountHtml extends ComKoowaViewHtml
         );
 
         // Rewards payout details
-        $context->data->dr_bonuses = $this->getObject('com://admin/nucleonplus.model.referralbonuses')
+        $context->data->dr_bonuses = $this->getObject('com://admin/nucleonplus.model.rewards')
             ->account($account->account_number)
             ->type('direct_referral')
             ->payout_id(0)
             ->fetch()
         ;
 
-        $context->data->ir_bonuses = $this->getObject('com://admin/nucleonplus.model.referralbonuses')
+        $context->data->ir_bonuses = $this->getObject('com://admin/nucleonplus.model.rewards')
             ->account($account->account_number)
             ->type('indirect_referral')
             ->payout_id(0)
             ->fetch()
         ;
 
-        $context->data->rebates = $this->getObject('com://admin/nucleonplus.model.referralbonuses')
+        $context->data->rebates = $this->getObject('com://admin/nucleonplus.model.rewards')
             ->account($account->account_number)
             ->type('rebates')
             ->payout_id(0)
