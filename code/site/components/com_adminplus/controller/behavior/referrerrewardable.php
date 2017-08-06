@@ -113,18 +113,18 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 $this->_accounting->allocateDRBonus($item->id, $item->drpv);
 
                 // Try to get the 1st indirect referrer
-                $indirect_referrer = $this->getObject('com:nucleonplus.model.accounts')
+                $referrer = $this->getObject('com:nucleonplus.model.accounts')
                     ->account_number($order->_account_sponsor_id)
                     ->fetch()
                 ;
 
-                // Check if the first indirect referrer has sponsor as well
-                if ($indirect_referrer->isNew())
+                // Check if the referrer has sponsor as well
+                if ($referrer->isNew() && !$referrer->sponsor_id)
                 {
-                    // There's a direct referrer sponsor but no indirect referrer sponsor, flushout indirect referral bonus
+                    // Direct referrer has no sponsor, flushout indirect referral bonus
                     $this->_accounting->allocateSurplusIRBonus($item->id, $item->irpv);
                 }
-                else $this->_recordIndirectReferrals($indirect_referrer->account_number, $item);
+                else $this->_recordIndirectReferrals($referrer->sponsor_id, $item);
             }
         }
     }
