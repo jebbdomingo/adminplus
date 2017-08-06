@@ -9,7 +9,7 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstract
+class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstract
 {
     /**
      * Referral bonus controller.
@@ -50,7 +50,7 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
         $config->append(array(
             'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
             'controller' => 'com://admin/nucleonplus.controller.rewards',
-            'accounting' => 'com://admin/nucleonplus.accounting.service.journal',
+            'accounting' => 'com://admin/nucleonplus.accounting.service.transfer',
         ));
 
         parent::_initialize($config);
@@ -75,21 +75,9 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
      */
     public function encode($order)
     {
-        $items = $order->getOrderItems();
-
-        foreach ($items as $item)
-        {
-            // Record rebates
-            $data = array(
-                'item'    => $item->id,
-                'account' => $order->_account_number,
-                'type'    => 'rebates',
-                'points'  => $item->rebates,
-            );
-            $this->_controller->add($data);
-
-            // Post rebates allocation to accounting system
-            $this->_accounting->allocateRebates($item->id, $item->rebates);
+        // Post charges allocation to accounting system
+        foreach ($order->getOrderItems() as $item) {
+            $this->_accounting->allocateCharges($item->id, $item->charges);
         }
     }
 }

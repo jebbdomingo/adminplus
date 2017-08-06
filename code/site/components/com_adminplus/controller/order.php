@@ -73,6 +73,7 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 'com://admin/nucleonplus.controller.behavior.shippable',
                 'com:xend.controller.behavior.shippable',
                 'accountable',
+                'chargeable',
                 'rewardable',
                 'referrerrewardable',
                 'rebatable',

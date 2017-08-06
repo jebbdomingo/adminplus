@@ -84,6 +84,10 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
      */
     public function encode($order)
     {
+        // if ($order->payment_method == ComNucleonplusModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
+        // {
+        // }
+        
         $items = $order->getOrderItems();
 
         foreach ($items as $item)
@@ -91,8 +95,8 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             if (is_null($order->_account_sponsor_id))
             {
                 // No direct referrer sponsor, flushout direct and indirect referral bonus
-                $this->_accounting->allocateSurplusDRBonus($item->ItemRef, $item->drpv);
-                $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $item->irpv);
+                $this->_accounting->allocateSurplusDRBonus($item->id, $item->drpv);
+                $this->_accounting->allocateSurplusIRBonus($item->id, $item->irpv);
             }
             else
             {
@@ -106,7 +110,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 $this->_controller->add($data);
 
                 // Post direct referral reward to accounting system
-                $this->_accounting->allocateDRBonus($item->ItemRef, $item->drpv);
+                $this->_accounting->allocateDRBonus($item->id, $item->drpv);
 
                 // Try to get the 1st indirect referrer
                 $indirect_referrer = $this->getObject('com:nucleonplus.model.accounts')
@@ -118,7 +122,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 if ($indirect_referrer->isNew())
                 {
                     // There's a direct referrer sponsor but no indirect referrer sponsor, flushout indirect referral bonus
-                    $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $item->irpv);
+                    $this->_accounting->allocateSurplusIRBonus($item->id, $item->irpv);
                 }
                 else $this->_recordIndirectReferrals($indirect_referrer->account_number, $item);
             }
@@ -138,6 +142,9 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         $points = $item->irpv / $this->_unilevel_count;
         $x      = 0;
 
+        $ir_bonus_alloc         = array();
+        $ir_surplus_bonus_alloc = array();
+
         // Try to get referrers up to the _unilevel_count level
         while ($x < $this->_unilevel_count)
         {
@@ -156,15 +163,16 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             );
 
             $this->_controller->add($data);
-            $this->_accounting->allocateIRBonus($item->ItemRef, $points);
-            
+
+            @$ir_bonus_alloc[$item->id] += $points;
+
             // Terminate execution if the current indirect referrer has no sponsor/referrer i.e. there are no other indirect referrers to pay
             if (is_null($indirectReferrer->sponsor_id))
             {
                 if ($x < $this->_unilevel_count)
                 {
                     $points = ($this->_unilevel_count - $x) * $points;
-                    $this->_accounting->allocateSurplusIRBonus($item->ItemRef, $points);
+                    @$ir_surplus_bonus_alloc[$item->id] += $points;
                     break;
                 }
 
@@ -172,6 +180,14 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             }
 
             $account_number = $indirectReferrer->sponsor_id;
+        }
+
+        if (isset($ir_bonus_alloc[$item->id])) {
+            $this->_accounting->allocateIRBonus($item->id, $ir_bonus_alloc[$item->id]);
+        }
+
+        if (isset($ir_surplus_bonus_alloc[$item->id])) {
+            $this->_accounting->allocateSurplusIRBonus($item->id, $ir_surplus_bonus_alloc[$item->id]);
         }
     }
 }

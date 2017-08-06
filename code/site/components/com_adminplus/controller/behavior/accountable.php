@@ -127,11 +127,5 @@ class ComAdminplusControllerBehaviorAccountable extends KControllerBehaviorAbstr
         $resp = $this->getObject('com:qbsync.service.salesreceipt')->create($salesreceipt);
         $order->SalesReceiptRef = $resp;
         $order->save();
-
-        foreach ($order->getOrderItems() as $item)
-        {
-            $accounting = $this->getObject('com:nucleonplus.accounting.service.transfer');
-            $accounting->allocateCharges($item->id, $item->charges);
-        }
     }
 }
