@@ -19,13 +19,6 @@ class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstra
     protected $_controller;
 
     /**
-     * Accounting Service
-     *
-     * @var ComNucleonplusAccountingServiceTransferInterface
-     */
-    protected $_accounting;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -35,7 +28,6 @@ class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstra
         parent::__construct($config);
 
         $this->_controller = $this->getObject($config->controller);
-        $this->_accounting = $this->getObject($config->accounting);
     }
 
     /**
@@ -50,7 +42,6 @@ class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstra
         $config->append(array(
             'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
             'controller' => 'com://admin/nucleonplus.controller.rewards',
-            'accounting' => 'com://admin/nucleonplus.accounting.service.transfer',
         ));
 
         parent::_initialize($config);
@@ -75,9 +66,11 @@ class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstra
      */
     public function encode($order)
     {
+        $accounting = $this->getObject('com://admin/nucleonplus.accounting.service.journal');
+
         // Post charges allocation to accounting system
         foreach ($order->getOrderItems() as $item) {
-            $this->_accounting->allocateCharges($item->id, $item->charges);
+            $accounting->recordChargesExpense($item->id, $item->charges);
         }
     }
 }

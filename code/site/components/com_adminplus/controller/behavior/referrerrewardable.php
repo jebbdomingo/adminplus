@@ -26,11 +26,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
     protected $_controller;
 
     /**
-     * Accounting Service
+     * Accounting journal Service
      *
-     * @var ComNucleonplusAccountingServiceTransferInterface
+     * @var ComNucleonplusAccountingServiceJournalInterface
      */
-    protected $_accounting;
+    protected $_journal;
 
     /**
      * Constructor.
@@ -43,7 +43,6 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
 
         $this->_unilevel_count = $config->unilevel_count;
         $this->_controller     = $this->getObject($config->controller);
-        $this->_accounting     = $this->getObject($config->accounting);
     }
 
     /**
@@ -59,7 +58,6 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             'priority'       => static::PRIORITY_LOW, // low priority so that rewardable runs first
             'unilevel_count' => 20,
             'controller'     => 'com://admin/nucleonplus.controller.rewards',
-            'accounting'     => 'com://admin/nucleonplus.accounting.service.transfer',
         ));
 
         parent::_initialize($config);
@@ -88,6 +86,8 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         // {
         // }
         
+        $this->_journal = $this->getObject('com://admin/nucleonplus.accounting.service.journal');
+
         $items = $order->getOrderItems();
 
         foreach ($items as $item)
@@ -95,8 +95,8 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             if (is_null($order->_account_sponsor_id))
             {
                 // No direct referrer sponsor, flushout direct and indirect referral bonus
-                $this->_accounting->allocateSurplusDRBonus($item->id, $item->drpv);
-                $this->_accounting->allocateSurplusIRBonus($item->id, $item->irpv);
+                // $this->_transfer->allocateSurplusDRBonus($item->id, $item->drpv);
+                // $this->_transfer->allocateSurplusIRBonus($item->id, $item->irpv);
             }
             else
             {
@@ -110,7 +110,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 $this->_controller->add($data);
 
                 // Post direct referral reward to accounting system
-                $this->_accounting->allocateDRBonus($item->id, $item->drpv);
+                $this->_journal->recordDirectReferralExpense($item->id, $item->drpv);
 
                 // Try to get the 1st indirect referrer
                 $referrer = $this->getObject('com:nucleonplus.model.accounts')
@@ -122,7 +122,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 if ($referrer->isNew() && !$referrer->sponsor_id)
                 {
                     // Direct referrer has no sponsor, flushout indirect referral bonus
-                    $this->_accounting->allocateSurplusIRBonus($item->id, $item->irpv);
+                    // $this->_transfer->allocateSurplusIRBonus($item->id, $item->irpv);
                 }
                 else $this->_recordIndirectReferrals($referrer->sponsor_id, $item);
             }
@@ -183,11 +183,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         }
 
         if (isset($ir_bonus_alloc[$item->id])) {
-            $this->_accounting->allocateIRBonus($item->id, $ir_bonus_alloc[$item->id]);
+            $this->_journal->recordIndirectReferralExpense($item->id, $ir_bonus_alloc[$item->id]);
         }
 
-        if (isset($ir_surplus_bonus_alloc[$item->id])) {
-            $this->_accounting->allocateSurplusIRBonus($item->id, $ir_surplus_bonus_alloc[$item->id]);
-        }
+        // if (isset($ir_surplus_bonus_alloc[$item->id])) {
+        //     $this->_transfer->allocateSurplusIRBonus($item->id, $ir_surplus_bonus_alloc[$item->id]);
+        // }
     }
 }

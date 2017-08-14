@@ -46,14 +46,6 @@ defined('KOOWA') or die; ?>
                                     <td class="k-table-data--right"><?= number_format($total_rebates, 2) ?></td>
                                 </tr>
                                 <tr>
-                                    <td>Direct referral bonus</td>
-                                    <td class="k-table-data--right"><?= number_format($total_direct_referrals, 2) ?></td>
-                                </tr>
-                                <tr>
-                                    <td>Patronage bonus</td>
-                                    <td class="k-table-data--right"><?= number_format($total_patronages, 2) ?></td>
-                                </tr>
-                                <tr>
                                     <td>Unilevel bonus</td>
                                     <td class="k-table-data--right"><?= number_format($total_referral_bonus, 2) ?></td>
                                 </tr>

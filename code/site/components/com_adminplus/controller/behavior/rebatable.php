@@ -19,13 +19,6 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
     protected $_controller;
 
     /**
-     * Accounting Service
-     *
-     * @var ComNucleonplusAccountingServiceTransferInterface
-     */
-    protected $_accounting;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -35,7 +28,6 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
         parent::__construct($config);
 
         $this->_controller = $this->getObject($config->controller);
-        $this->_accounting = $this->getObject($config->accounting);
     }
 
     /**
@@ -50,7 +42,6 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
         $config->append(array(
             'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
             'controller' => 'com://admin/nucleonplus.controller.rewards',
-            'accounting' => 'com://admin/nucleonplus.accounting.service.journal',
         ));
 
         parent::_initialize($config);
@@ -75,6 +66,8 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
      */
     public function encode($order)
     {
+        $accounting = $this->getObject('com://admin/nucleonplus.accounting.service.journal');
+
         $items = $order->getOrderItems();
 
         foreach ($items as $item)
@@ -89,7 +82,7 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
             $this->_controller->add($data);
 
             // Post rebates allocation to accounting system
-            $this->_accounting->allocateRebates($item->id, $item->rebates);
+            $this->accounting->recordRebatesExpense($item->id, $item->rebates);
         }
     }
 }
