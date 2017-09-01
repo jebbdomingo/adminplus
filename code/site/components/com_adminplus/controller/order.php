@@ -75,7 +75,11 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 'accountable',
                 'chargeable',
                 'rewardable',
-                'referrerrewardable',
+                'referrerrewardable' => array(
+                    'account_field'  => '_account_sponsor_id',
+                    'items_field'    => 'items',
+                    'quantity_field' => 'quantity'
+                ),
                 'rebatable',
             ),
         ));
@@ -388,6 +392,8 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
 
             // Calculate order totals based on order items
             $order->calculate()->save();
+
+            $order->items = $order->getOrderItems();
 
             /**
              * @todo Move cart operation to com:cart behavior

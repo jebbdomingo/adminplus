@@ -33,6 +33,27 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
     protected $_journal;
 
     /**
+     * Account field name of the entity to process
+     *
+     * @var mixed
+     */
+    protected $_account_field;
+
+    /**
+     * Items field name of the entity to process
+     *
+     * @var mixed
+     */
+    protected $_items_field;
+
+    /**
+     * Item's quantity field name of the entity to process
+     *
+     * @var mixed
+     */
+    protected $_item_quantity_field;
+
+    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -41,8 +62,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
     {
         parent::__construct($config);
 
-        $this->_unilevel_count = $config->unilevel_count;
-        $this->_controller     = $this->getObject($config->controller);
+        $this->_unilevel_count      = $config->unilevel_count;
+        $this->_controller          = $this->getObject($config->controller);
+        $this->_account_field       = $config->account_field;
+        $this->_items_field         = $config->items_field;
+        $this->_item_quantity_field = $config->item_quantity_field;
     }
 
     /**
@@ -55,9 +79,12 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'       => static::PRIORITY_LOW, // low priority so that rewardable runs first
-            'unilevel_count' => 20,
-            'controller'     => 'com://admin/nucleonplus.controller.rewards',
+            'priority'            => static::PRIORITY_LOW, // low priority so that rewardable runs first
+            'unilevel_count'      => 20,
+            'controller'          => 'com://admin/nucleonplus.controller.rewards',
+            'account_field'       => 'account_id',
+            'items_field'         => 'items',
+            'item_quantity_field' => 'quantity',
         ));
 
         parent::_initialize($config);
@@ -72,15 +99,22 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
      */
     protected function _afterAdd(KControllerContext $context)
     {
-        $this->encode($context->result);
+        $entity  = $context->result;
+        $account = $entity->{$this->_account_field};
+        $items   = $entity->{$this->_items_field};
+        // $items = $entity->getOrderItems();
+
+        $this->encode($account, $items);
     }
 
     /**
      * Encode referral reward points
      *
+     * @param mixed                 $account Account ID
+     * @param KModelEntityInterface $items
      * @return void
      */
-    public function encode($order)
+    public function encode($account, $items)
     {
         // if ($order->payment_method == ComNucleonplusModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
         // {
@@ -88,43 +122,32 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         
         $this->_journal = $this->getObject('com://admin/nucleonplus.accounting.service.journal');
 
-        $items = $order->getOrderItems();
-
         foreach ($items as $item)
         {
-            if (is_null($order->_account_sponsor_id))
-            {
-                // No direct referrer sponsor, flushout direct and indirect referral bonus
-                // $this->_transfer->allocateSurplusDRBonus($item->id, $item->drpv);
-                // $this->_transfer->allocateSurplusIRBonus($item->id, $item->irpv);
-            }
-            else
-            {
-                // Record direct referral reward
-                $data = array(
-                    'item'    => $item->id,
-                    'account' => $order->_account_sponsor_id,
-                    'type'    => 'direct_referral', // Direct Referral
-                    'points'  => $item->drpv,
-                );
-                $this->_controller->add($data);
+            $quantity = $item->{$this->_item_quantity_field};
+            $points   = $item->drpv * $quantity
 
-                // Post direct referral reward to accounting system
-                $this->_journal->recordDirectReferralExpense($item->id, $item->drpv);
+            // Record direct referral reward
+            $data = array(
+                'item'    => $item->id,
+                'account' => $account,
+                'type'    => 'direct_referral', // Direct Referral
+                'points'  => $points,
+            );
+            $this->_controller->add($data);
 
-                // Try to get the 1st indirect referrer
-                $referrer = $this->getObject('com:nucleonplus.model.accounts')
-                    ->account_number($order->_account_sponsor_id)
-                    ->fetch()
-                ;
+            // Post direct referral reward to accounting system
+            $this->_journal->recordDirectReferralExpense($item->id, $points);
 
-                // Check if the referrer has sponsor as well
-                if ($referrer->isNew() && !$referrer->sponsor_id)
-                {
-                    // Direct referrer has no sponsor, flushout indirect referral bonus
-                    // $this->_transfer->allocateSurplusIRBonus($item->id, $item->irpv);
-                }
-                else $this->_recordIndirectReferrals($referrer->sponsor_id, $item);
+            // Try to get the 1st indirect referrer
+            $referrer = $this->getObject('com:nucleonplus.model.accounts')
+                ->id($account)
+                ->fetch()
+            ;
+
+            // Check if the referrer has sponsor as well (i.e. indirect referrer)
+            if (!$referrer->isNew() && $referrer->sponsor_id) {
+                $this->_recordIndirectReferrals($referrer->sponsor_id, $item);
             }
         }
     }
@@ -137,10 +160,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
      *
      * @return void
      */
-    private function _recordIndirectReferrals($account_number, KModelEntityInterface $item)
+    private function _recordIndirectReferrals($account, KModelEntityInterface $item)
     {
-        $points = $item->irpv / $this->_unilevel_count;
-        $x      = 0;
+        $quantity = $item->{$this->_item_quantity_field};
+        $points   = ($item->irpv / $this->_unilevel_count) * $quantity;
+        $x        = 0;
 
         $ir_bonus_alloc         = array();
         $ir_surplus_bonus_alloc = array();
@@ -150,14 +174,14 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
         {
             $x++;
 
-            $indirectReferrer = $this->getObject('com:nucleonplus.model.accounts')
-                ->account_number($account_number)
+            $indirect_referrer = $this->getObject('com:nucleonplus.model.accounts')
+                ->id($account)
                 ->fetch()
             ;
 
             $data = array(
                 'item'    => $item->id,
-                'account' => $indirectReferrer->account_number,
+                'account' => $indirect_referrer->id,
                 'type'    => 'indirect_referral', // Indirect Referral
                 'points'  => $points
             );
@@ -167,7 +191,7 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
             @$ir_bonus_alloc[$item->id] += $points;
 
             // Terminate execution if the current indirect referrer has no sponsor/referrer i.e. there are no other indirect referrers to pay
-            if (is_null($indirectReferrer->sponsor_id))
+            if (is_null($indirect_referrer->sponsor_id))
             {
                 if ($x < $this->_unilevel_count)
                 {
@@ -179,15 +203,11 @@ class ComAdminplusControllerBehaviorReferrerrewardable extends KControllerBehavi
                 break;
             }
 
-            $account_number = $indirectReferrer->sponsor_id;
+            $account = $indirect_referrer->sponsor_id;
         }
 
         if (isset($ir_bonus_alloc[$item->id])) {
             $this->_journal->recordIndirectReferralExpense($item->id, $ir_bonus_alloc[$item->id]);
         }
-
-        // if (isset($ir_surplus_bonus_alloc[$item->id])) {
-        //     $this->_transfer->allocateSurplusIRBonus($item->id, $ir_surplus_bonus_alloc[$item->id]);
-        // }
     }
 }
