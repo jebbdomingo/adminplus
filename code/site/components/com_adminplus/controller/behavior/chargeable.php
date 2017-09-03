@@ -70,7 +70,7 @@ class ComAdminplusControllerBehaviorChargeable extends KControllerBehaviorAbstra
 
         // Post charges allocation to accounting system
         foreach ($order->getOrderItems() as $item) {
-            $accounting->recordChargesExpense($item->id, $item->charges);
+            $accounting->recordChargesExpense($item->id, $item->charges * $item->quantity);
         }
     }
 }

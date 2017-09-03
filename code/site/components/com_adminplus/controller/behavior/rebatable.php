@@ -77,7 +77,7 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
                 'item'    => $item->id,
                 'account' => $order->_account_number,
                 'type'    => 'rebates',
-                'points'  => $item->rebates,
+                'points'  => $item->rebates * $item->quantity,
             );
             $this->_controller->add($data);
 
