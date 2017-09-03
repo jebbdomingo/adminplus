@@ -206,7 +206,7 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
         $config->append(array(
             'model'    => 'accounts',
             'value'    => 'id',
-            'label'    => 'account_number',
+            'label'    => 'user_name',
             'sort'     => 'id',
             'validate' => false
         ));
@@ -333,5 +333,25 @@ class ComAdminplusTemplateHelperListbox extends ComKoowaTemplateHelperListbox
         }
 
         return parent::optionlist($config);
+    }
+
+    /**
+     * Provides an accounts autocomplete select box.
+     *
+     * @param  array|KObjectConfig $config An optional configuration array.
+     * @return string The autocomplete users select box.
+     */
+    public function orders($config = array())
+    {
+        $config = new KObjectConfigJson($config);
+        $config->append(array(
+            'model'    => 'orders',
+            'value'    => 'id',
+            'label'    => 'id',
+            'sort'     => 'id',
+            'validate' => false
+        ));
+
+        return $this->_autocomplete($config);
     }
 }

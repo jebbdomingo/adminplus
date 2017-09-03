@@ -82,7 +82,7 @@ class ComAdminplusControllerBehaviorRebatable extends KControllerBehaviorAbstrac
             $this->_controller->add($data);
 
             // Post rebates allocation to accounting system
-            $this->accounting->recordRebatesExpense($item->id, $item->rebates);
+            $accounting->recordRebatesExpense($item->id, $item->rebates);
         }
     }
 }

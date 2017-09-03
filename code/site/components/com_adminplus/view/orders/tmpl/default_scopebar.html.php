@@ -11,7 +11,7 @@ defined('KOOWA') or die; ?>
     <div data-filter data-title="<?= translate('Member'); ?>"
          data-count="<?= (!is_null(parameters()->account_id)) ? 1 : 0 ?>"
     >
-        <?= helper('listbox.users', array(
+        <?= helper('listbox.accounts', array(
             'name'     => 'account_id',
             'select2'  => true,
             'selected' => parameters()->account_id,

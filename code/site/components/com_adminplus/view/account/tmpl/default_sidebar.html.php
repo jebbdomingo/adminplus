@@ -18,7 +18,7 @@
                 </a>
             </li>
             <li class="<?= parameters()->view === 'orders' ? 'k-is-active' : null ?>">
-                <a href="<?= route('view=orders&account_id=' . $account->id) ?>">
+                <a href="<?= route('view=orders&search=' . $account->id) ?>">
                     Orders
                 </a>
             </li>

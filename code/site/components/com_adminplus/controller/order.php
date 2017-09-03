@@ -19,13 +19,6 @@
 class ComAdminplusControllerOrder extends ComKoowaControllerModel
 {
     /**
-     * Sales Receipt Service
-     *
-     * @var ComNucleonplusAccountingServiceInventoryInterface
-     */
-    protected $_inventory_service;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -42,17 +35,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
         $this->addCommandCallback('before.markdelivered', '_validateDelivered');
         $this->addCommandCallback('before.markcompleted', '_validateCompleted');
         $this->addCommandCallback('before.cancelorder', '_validateCancelorder');
-
-        // Inventory service
-        $identifier = $this->getIdentifier($config->inventory_service);
-        $service    = $this->getObject($identifier);
-        if (!($service instanceof ComNucleonplusAccountingServiceInventoryInterface))
-        {
-            throw new UnexpectedValueException(
-                "Service $identifier does not implement ComNucleonplusAccountingServiceInventoryInterface"
-            );
-        }
-        else $this->_inventory_service = $service;
     }
 
     /**
@@ -66,20 +48,15 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'inventory_service' => 'com://admin/nucleonplus.accounting.service.inventory',
-            'behaviors'         => array(
+            'behaviors' => array(
                 'com://admin/nucleonplus.controller.behavior.cancellable',
                 'com://admin/nucleonplus.controller.behavior.processable',
                 'com://admin/nucleonplus.controller.behavior.shippable',
                 'com:xend.controller.behavior.shippable',
+                'rewardable',
                 'accountable',
                 'chargeable',
-                'rewardable',
-                'referrerrewardable' => array(
-                    'account_field'  => '_account_sponsor_id',
-                    'items_field'    => 'items',
-                    'quantity_field' => 'quantity'
-                ),
+                'referrerrewardable',
                 'rebatable',
             ),
         ));
@@ -96,9 +73,19 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
      */
     protected function _validate(KControllerContextInterface $context)
     {
+        // Inventory service
+        $identifier = $this->getIdentifier('com://admin/nucleonplus.accounting.service.inventory');
+        $service    = $this->getObject($identifier);
+        if (!($service instanceof ComNucleonplusAccountingServiceInventoryInterface))
+        {
+            throw new UnexpectedValueException(
+                "Service $identifier does not implement ComNucleonplusAccountingServiceInventoryInterface"
+            );
+        }
+
         $translator = $this->getObject('translator');
         $data       = $context->request->data;
-        $account    = $this->getObject('com:nucleonplus.model.accounts')->id($data->account_id)->fetch();
+        $account    = $this->getObject('com://admin/nucleonplus.model.accounts')->id($data->account_id)->fetch();
         $cart       = $this->getObject('com://admin/nucleonplus.model.carts')->id($data->cart_id)->fetch();
         $error      = false;
         $result     = false;
@@ -116,7 +103,7 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
                 
                 foreach ($itemQty as $id => $qty)
                 {
-                    $result = $this->_inventory_service->getQuantity($id, true);
+                    $result = $service->getQuantity($id, true);
 
                     if ($result['available'] < $qty)
                     {
@@ -362,7 +349,7 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
         $cart       = $this->getObject('com://admin/nucleonplus.model.carts')->id($data->cart_id)->fetch();
 
         $order = $this->getModel()->create(array(
-            'account_id'      => $data->account_id,
+            'account'         => $data->account_id,
             'order_status'    => $data->order_status,
             'invoice_status'  => $data->invoice_status,
             'payment_method'  => $data->payment_method,
@@ -392,8 +379,6 @@ class ComAdminplusControllerOrder extends ComKoowaControllerModel
 
             // Calculate order totals based on order items
             $order->calculate()->save();
-
-            $order->items = $order->getOrderItems();
 
             /**
              * @todo Move cart operation to com:cart behavior

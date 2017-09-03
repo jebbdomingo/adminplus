@@ -11,20 +11,19 @@ class ComAdminplusViewAccountHtml extends ComKoowaViewHtml
 {
     protected function _fetchData(KViewContext $context)
     {
-        $model   = $this->getModel();
-        $account = $model->fetch();
-        
-        $model->account_number($account->account_number);
+        parent::_fetchData($context);
+
+        $account = $context->data->account;
 
         // Rewards summary
-        $context->data->total_referral_bonus   = $model->getTotalAvailableReferralBonus()->total;
-        $context->data->total_rebates          = $model->getTotalAvailableRebates()->total;
+        $context->data->rebates            = $account->getRebatesBalance();
+        $context->data->direct_referrals   = $account->getDirectReferralBalance();
+        $context->data->indirect_referrals = $account->getIndirectReferralBalance();
 
-        $context->data->total_bonus = (
-            $context->data->total_referral_bonus +
-            $context->data->total_rebates
+        $context->data->total = (
+            $context->data->rebates +
+            $context->data->direct_referrals +
+            $context->data->indirect_referrals
         );
-
-        parent::_fetchData($context);
     }
 }
