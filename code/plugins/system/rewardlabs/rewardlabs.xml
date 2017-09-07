@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<extension type="plugin" version="2.5" group="system" method="upgrade">
+    <identifier>plg:system.rewardlabs</identifier>
+    <name>plg_system_rewardlabs</name>
+    <version>1.0.0</version>
+    <author>Jebb Domingo</author>
+    <creationDate>December 2016</creationDate>
+    <copyright>Copyright (C) 2016 Nucleon + Co. (http://www.rewardlabs.com)</copyright>
+    <authorEmail>jebb.domingo@gmail.com</authorEmail>
+    <authorUrl>www.rewardlabs.com</authorUrl>
+    <description>PLG_SYSTEM_REWARDLABS_DESCRIPTION</description>
+    <files>
+        <filename plugin="rewardlabs">rewardlabs.php</filename>
+        <folder>language</folder>
+    </files>
+</extension>
