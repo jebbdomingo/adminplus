@@ -95,9 +95,9 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
     protected function _sendMail($payout)
     {
         // Send email notification
-        $emailSubject = JText::sprintf('COM_NUCLEONPLUS_PAYOUT_EMAIL_FUNDS_TRANSFER_SUCCESSFUL_SUBJECT', $payout->id);
+        $emailSubject = JText::sprintf('COM_REWARDLABS_PAYOUT_EMAIL_FUNDS_TRANSFER_SUCCESSFUL_SUBJECT', $payout->id);
         $emailBody    = JText::sprintf(
-            'COM_NUCLEONPLUS_PAYOUT_EMAIL_FUNDS_TRANSFER_SUCCESSFUL_BODY',
+            'COM_REWARDLABS_PAYOUT_EMAIL_FUNDS_TRANSFER_SUCCESSFUL_BODY',
             $payout->name,
             'PHP 15.00',
             JUri::root()
@@ -108,7 +108,7 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
         // Check for an error.
         if ($mail !== true) {
-            $context->response->addMessage(JText::_('COM_NUCLEONPLUS_PAYOUT_EMAIL_SEND_MAIL_FAILED'), 'error');
+            $context->response->addMessage(JText::_('COM_REWARDLABS_PAYOUT_EMAIL_SEND_MAIL_FAILED'), 'error');
         }
     }
 }

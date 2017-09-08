@@ -107,7 +107,7 @@ class PlgSystemRewardlabs extends JPlugin
         if (in_array(2, $user->getGroups())) {
             $dashboard_url = $baseUrl . 'index.php?option=com_nucleonplus&view=account';
         } else {
-            $dashboard_url = $baseUrl . 'index.php?option=com_adminplus&view=accounts';
+            $dashboard_url = $baseUrl . 'index.php?option=com_rewardlabs&view=accounts';
         }
 
         $config = new KObjectConfigJson();
