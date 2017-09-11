@@ -8,7 +8,7 @@
     <authorEmail>info@rewardlabs.com</authorEmail>
     <authorUrl>www.rewardlabs.com</authorUrl>
     <version>1.0.0</version>
-    <description>COM_REWARDLABS_XML_DESCRIPTION</description>
+    <description>Reward Labs System</description>
 
     <scriptfile>resources/install/script.php</scriptfile>
 
