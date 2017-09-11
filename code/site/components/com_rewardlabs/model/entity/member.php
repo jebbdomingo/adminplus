@@ -58,7 +58,7 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             // $subject = "Your Nucleon Plus Account has been activated";
             $subject = 'Your Nucleon + Account has been created';
             $body    = JText::sprintf(
-                "Hello %s,\n\nContratulations! Your Nucleon + Account has been created. You can now login at %s with the following username and password.\n\nUsername: %s\npassword: %s\n\nplease change your password after you login.\n\nHave a nice day!",
+                "Hello %s,\n\nContratulations! Your Nucleon + Account has been created. You can now login at %s with the following username and password.\n\nUsername: %s\npassword: %s\n\nHave a nice day!",
                 $member->name,
                 JUri::root(),
                 $member->username,
