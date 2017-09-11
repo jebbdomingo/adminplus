@@ -16,48 +16,6 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
     const STATUS_DELETED = 'deleted';
 
     /**
-     * @var ComRewardlabsAccountingServiceMemberInterface
-     */
-    protected $_member_service;
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config Configuration options.
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $identifier = $this->getIdentifier($config->member_service);
-        $service    = $this->getObject($identifier);
-
-        if (!($service instanceof ComRewardlabsAccountingMemberInterface))
-        {
-            throw new UnexpectedValueException(
-                "Service $identifier does not implement ComRewardlabsAccountingMemberInterface"
-            );
-        }
-        else $this->_member_service = $service;
-    }
-
-    /**
-     * Initializes the options for the object.
-     *
-     * Called from {@link __construct()} as a first step of object instantiation.
-     *
-     * @param KObjectConfig $config Configuration options.
-     */
-    protected function _initialize(KObjectConfig $config)
-    {
-        $config->append(array(
-            'member_service' => 'com://site/rewardlabs.accounting.member'
-        ));
-
-        parent::_initialize($config);
-    }
-
-    /**
      * Saves the entity to the data store
      *
      * @return boolean
@@ -114,11 +72,6 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
 
             $account          = $this->_updateAccount($user->id);
             $this->account_id = $account->id;
-
-            // Only push an update to a synced member/customer to accounting system
-            if ($account->CustomerRef) {
-                $this->_member_service->pushMember($account, 'update');
-            }
         }
 
         return true;
