@@ -54,6 +54,22 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             $this->id         = $user->id;
             $account          = $this->_createAccount($user->id);
             $this->account_id = $account->id;
+
+            // $subject = "Your Nucleon Plus Account has been activated";
+            $subject = JText::_('COM_REWARDLABS_EMAIL_REGISTRATION_SUBJECT')
+            $body    = JText::sprintf(
+                'COM_REWARDLABS_EMAIL_REGISTRATION_BODY',
+                $name,
+                JUri::root(),
+                $member->username,
+                $member->password
+            );
+
+            $config   = JFactory::getConfig();
+            $mailFrom = $config->get('mailfrom');
+            $fromName = $config->get('fromname');
+
+            $result = JFactory::getMailer()->sendMail($mailFrom, $fromName, $member->email, $subject, $body);
         }
         else
         {
