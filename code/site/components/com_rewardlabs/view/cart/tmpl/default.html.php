@@ -14,6 +14,9 @@ defined('KOOWA') or die; ?>
     'domain' => 'admin'
 )); ?>
 
+<?= helper('behavior.addable'); ?>
+<?= helper('behavior.updatable'); ?>
+
 <? // Add template class to visually enclose the forms ?>
 <script>document.documentElement.className += " k-frontend-ui";</script>
 
