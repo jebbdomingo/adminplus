@@ -234,7 +234,7 @@ class ComRewardlabsTemplateHelperListbox extends ComKoowaTemplateHelperListbox
                 continue;
             }
 
-            $options[] = array('label' => "{$item->Name} | PHP {$item->UnitPrice} | ItemRef:{$item->ItemRef}", 'value' => $item->ItemRef);
+            $options[] = array('label' => $item->Name, 'value' => $item->ItemRef);
         }
 
         $config->append(array(
