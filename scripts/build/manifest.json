@@ -1,6 +1,6 @@
 {
   "packages": [
     {"title": "Joomlatools Framework", "path": "framework"},
-    {"title": "Nucleon Plus", "path": "rewardlabs"}
+    {"title": "Reward Labs System", "path": "rewardlabs"}
   ]
 }

@@ -22,7 +22,21 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+DROP TABLE IF EXISTS `#__rewardlabs_carts`;
+DROP TABLE IF EXISTS `#__rewardlabs_cartitems`;
+
+-- --------------------------------------------------------
+
 DROP TABLE IF EXISTS `#__rewardlabs_accounts`;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__rewardlabs_cities`;
+DROP TABLE IF EXISTS `#__rewardlabs_provinces`;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__rewardlabs_configs`;
 
 -- --------------------------------------------------------
 
@@ -30,23 +44,11 @@ DROP TABLE IF EXISTS `#__rewardlabs_employeeaccounts`;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `#__rewardlabs_items`;
-
--- --------------------------------------------------------
-
 DROP TABLE IF EXISTS `#__rewardlabs_orders`;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `#__rewardlabs_packageitems`;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__rewardlabs_packages`;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__rewardlabs_qbopackages`;
+DROP TABLE IF EXISTS `#__rewardlabs_orderitems`;
 
 -- --------------------------------------------------------
 
@@ -54,20 +56,4 @@ DROP TABLE IF EXISTS `#__rewardlabs_payouts`;
 
 -- --------------------------------------------------------
 
-DROP TABLE IF EXISTS `#__rewardlabs_patronagebonuses`;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__rewardlabs_referralbonuses`;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__rewardlabs_rewardpackages`;
-
--- --------------------------------------------------------
-
 DROP TABLE IF EXISTS `#__rewardlabs_rewards`;
-
--- --------------------------------------------------------
-
-DROP TABLE IF EXISTS `#__rewardlabs_slots`;
