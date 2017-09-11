@@ -174,9 +174,8 @@ class PlgUserRewardlabs extends JPlugin
         {
             $sponsor = $this->getObject('com://admin/rewardlabs.model.accounts')->id($user['sponsor_id'])->fetch();
 
-            if (count($sponsor) == 0) {
+            if ($sponsor->isNew()) {
                 throw new Exception('Invalid Sponsor ID');
-                return false;
             }
         }
 

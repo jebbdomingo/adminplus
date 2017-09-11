@@ -105,4 +105,29 @@ class ComRewardlabsControllerMember extends ComKoowaControllerModel
 
         return $result;
     }
+
+    protected function _actionEdit(KControllerContextInterface $context)
+    {
+        if(!$context->result instanceof KModelEntityInterface) {
+            $id = $context->request->query->get('id', 'int');
+            $entities = $this->getObject('com://site/rewardlabs.model.members')->id($id)->fetch();
+        } else {
+            $entities = $context->result;
+        }
+
+        if(count($entities))
+        {
+            foreach($entities as $entity) {
+                $entity->setProperties($context->request->data->toArray());
+            }
+
+            //Only set the reset content status if the action explicitly succeeded
+            if($entities->save() === true) {
+                $context->response->setStatus(KHttpResponse::RESET_CONTENT);
+            }
+        }
+        else throw new KControllerExceptionResourceNotFound('Resource could not be found');
+
+        return $entities;
+    }
 }
