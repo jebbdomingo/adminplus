@@ -26,9 +26,11 @@ defined('KOOWA') or die; ?>
             <li class="<?= parameters()->view === 'payouts' ? 'k-is-active' : null ?>">
                 <a href="<?= route('view=payouts') ?>"><?= translate('Payouts') ?></a>
             </li>
-            <li class="<?= parameters()->view === 'configs' ? 'k-is-active' : null ?>">
-                <a href="<?= route('view=configs') ?>"><?= translate('Configs') ?></a>
-            </li>
+            <? if (object('com://site/rewardlabs.controller.config')->canManage()): ?>
+                <li class="<?= parameters()->view === 'configs' ? 'k-is-active' : null ?>">
+                    <a href="<?= route('view=configs') ?>"><?= translate('Configs') ?></a>
+                </li>
+            <? endif ?>
         </ul>
     </div>
 

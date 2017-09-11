@@ -17,12 +17,22 @@ class PlgSystemRewardlabs extends JPlugin
      */
     public function onAfterRoute()
     {
-        // Render the sticky toolbar
-        $this->_renderToolbar();
+        // Render the sticky toolbar on joomlatools-framework components
+        $this->getObject('event.publisher')->addListener('onBeforeKoowaHtmlViewRender', function($context) {
+            if ($context->layout === 'koowa') {
+                $context->getTarget()->setContent($this->_renderToolbar().$context->getTarget()->getContent());
+            }
+        }, KEvent::PRIORITY_LOW);
     }
 
+    /**
+     * This event handler does not run when the page is rendered by the framework
+     */
     public function onAfterDispatch()
     {
+        // Renders the sticky toolbar in Joomla context
+        JFactory::getDocument()->addCustomTag($this->_renderToolbar());
+
         $request = $this->getObject('request');
         $input   = JFactory::getApplication()->input;
 
@@ -124,11 +134,18 @@ class PlgSystemRewardlabs extends JPlugin
             )
         ));
 
-        $doc = JFactory::getDocument();
-        $doc->addScriptDeclaration('Rewardlabs.ToolBar.init('.$config->options.');');
-        $doc->addStyleSheet(JURI::base() . 'media/com_rewardlabs/css/toolbar.css');
-        $doc->addScript(JURI::base() . 'media/com_rewardlabs/js/rewardlabs.toolbar.js');
-        $doc->addScript(JURI::base() . 'media/com_rewardlabs/js/toolbar.js');
+        $html = $this->getObject('template.default')
+            ->addFilter('lib:template.filter.style')
+            ->addFilter('lib:template.filter.script')
+            ->addFilter('com:koowa.template.filter.asset')
+            ->loadString('
+                <ktml:style src="media://com_rewardlabs/css/toolbar.css" />
+                <ktml:script src="media://com_rewardlabs/js/rewardlabs.toolbar.js" />
+                <ktml:script src="media://com_rewardlabs/js/toolbar.js" />
+                <script>Rewardlabs.ToolBar.init('.$config->options.');</script>', 'php')
+            ->render();
+
+        return $html;
     }
 
     /**

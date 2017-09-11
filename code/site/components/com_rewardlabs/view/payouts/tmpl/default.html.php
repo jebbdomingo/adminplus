@@ -48,7 +48,25 @@ defined('KOOWA') or die; ?>
 
                     <!-- Reward summary -->
                     <div class="k-alert k-alert--info k-no-margin">
-                        <span class="k-icon-info" aria-hidden="true"></span> <strong>Total</strong> Rebates: <strong><?= $rebates ?></strong> Direct Referrals: <strong><?= $direct_referrals ?></strong> Indirect Referrals: <strong><?= $indirect_referrals ?></strong>
+                        <span class="k-icon-info" aria-hidden="true"></span> <strong>Total</strong>
+                        <div class="k-table">
+                            <table class="k-js-responsive-table">
+                                <tbody>
+                                    <tr>
+                                        <td>Rebates</td>
+                                        <td><strong><?= $rebates ?></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Direct Referrals</td>
+                                        <td><strong><?= $direct_referrals ?></strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Inirect Referrals</td>
+                                        <td><strong><?= $indirect_referrals ?></strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                     <!-- Table -->

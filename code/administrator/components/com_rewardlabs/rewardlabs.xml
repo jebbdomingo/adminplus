@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0.0" method="upgrade">
+    <identifier>com:rewardlabs</identifier>
+    <name>com_rewardlabs</name>
+    <author>Jebb Domingo</author>
+    <creationDate>January 2016</creationDate>
+    <copyright>Copyright (C) 2016 - 2019 Nucleon + Co. (https://www.rewardlabs.com)</copyright>
+    <authorEmail>info@rewardlabs.com</authorEmail>
+    <authorUrl>www.rewardlabs.com</authorUrl>
+    <version>1.0.0</version>
+    <description>COM_REWARDLABS_XML_DESCRIPTION</description>
+
+    <scriptfile>resources/install/script.php</scriptfile>
+
+    <install>
+        <sql>
+            <file driver="mysql" charset="utf8">resources/install/install.sql</file>
+        </sql>
+    </install>
+
+    <uninstall>
+        <sql>
+            <file driver="mysql" charset="utf8">resources/install/uninstall.sql</file>
+        </sql>
+    </uninstall>
+
+    <files folder="site/components/com_rewardlabs">
+        <folder>accounting</folder>
+        <folder>controller</folder>
+        <folder>database</folder>
+        <folder>dispatcher</folder>
+        <folder>model</folder>
+        <folder>resources</folder>
+        <folder>service</folder>
+        <folder>template</folder>
+        <folder>view</folder>
+
+        <filename>rewardlabs.php</filename>
+    </files>
+    
+    <media folder="media">
+        <folder>com_rewardlabs</folder>
+    </media>
+
+    <administration>
+        <files folder="administrator/components/com_rewardlabs">
+            <folder>language</folder>
+            <folder>resources</folder>
+
+            <filename>version.php</filename>
+        </files>
+    </administration>
+
+    <dependencies>
+        <dependency type="plugin" element="rewardlabs" folder="user">extensions/plg_user_rewardlabs</dependency>
+        <dependency type="plugin" element="rewardlabs" folder="system">extensions/plg_system_rewardlabs</dependency>
+    </dependencies>
+</extension>

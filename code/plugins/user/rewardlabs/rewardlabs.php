@@ -152,7 +152,7 @@ class PlgUserRewardlabs extends JPlugin
 
             // Redirect to member form
             $app = JFactory::getApplication();
-            $app->enqueueMessage('Please enter your Sponsor\'s ID', 'warning');
+            $app->enqueueMessage('Please enter Sponsor\'s ID', 'warning');
             $app->redirect(JRoute::_('index.php?option=com_rewardlabs&view=member&layout=form', false));
         }
 
