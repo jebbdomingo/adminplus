@@ -23,7 +23,6 @@ class ComRewardlabsControllerMember extends ComKoowaControllerModel
 
         $this->addCommandCallback('before.add', '_validateSponsorId');
         $this->addCommandCallback('before.edit', '_validateSponsorId');
-        $this->addCommandCallback('after.delete', '_setRedirect');
     }
 
     /**
@@ -46,20 +45,6 @@ class ComRewardlabsControllerMember extends ComKoowaControllerModel
     }
 
     /**
-     * Redirect callback
-     *
-     * @param KControllerContextInterface $context
-     * @return void
-     */
-    protected function _setRedirect(KControllerContextInterface $context)
-    {
-        $identifier = $context->getSubject()->getIdentifier();
-        $url        = JRoute::_(sprintf('index.php?option=com_%s', $identifier->package), false);
-
-        $context->response->setRedirect($url);
-    }
-
-    /**
      * Validate sponsor id
      *
      * @param KControllerContextInterface $context
@@ -68,20 +53,13 @@ class ComRewardlabsControllerMember extends ComKoowaControllerModel
      */
     protected function _validateSponsorId(KControllerContextInterface $context)
     {
-        $result = true;
-
-        if (!$context->result instanceof KModelEntityInterface) {
-            $entity = $this->getModel()->create();
-        } else {
-            $entity = $context->result;
-        }
+        $data = $context->request->data;
 
         try
         {
             $translator = $this->getObject('translator');
 
-            $entity->setProperties($context->request->data->toArray());
-            $sponsorId = trim($entity->sponsor_id);
+            $sponsorId = trim($data->sponsor_id);
 
             if (!empty($sponsorId))
             {
@@ -93,41 +71,11 @@ class ComRewardlabsControllerMember extends ComKoowaControllerModel
                     $result = false;
                 }
             }
-            else $context->request->data->sponsor_id = $entity->_account_sponsor_id;
         }
         catch(Exception $e)
         {
-            $context->getResponse()->setRedirect($this->getRequest()->getReferrer(), $e->getMessage(), 'error');
+            $context->getResponse()->setRedirect($this->getRequest()->getReferrer(), $e->getMessage(), KControllerResponse::FLASH_ERROR);
             $context->getResponse()->send();
-
-            $result = false;
         }
-
-        return $result;
-    }
-
-    protected function _actionEdit(KControllerContextInterface $context)
-    {
-        if(!$context->result instanceof KModelEntityInterface) {
-            $id = $context->request->query->get('id', 'int');
-            $entities = $this->getObject('com://site/rewardlabs.model.members')->id($id)->fetch();
-        } else {
-            $entities = $context->result;
-        }
-
-        if(count($entities))
-        {
-            foreach($entities as $entity) {
-                $entity->setProperties($context->request->data->toArray());
-            }
-
-            //Only set the reset content status if the action explicitly succeeded
-            if($entities->save() === true) {
-                $context->response->setStatus(KHttpResponse::RESET_CONTENT);
-            }
-        }
-        else throw new KControllerExceptionResourceNotFound('Resource could not be found');
-
-        return $entities;
     }
 }
