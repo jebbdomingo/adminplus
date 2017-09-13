@@ -19,7 +19,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
-CREATE TABLE `#__rewardlabs_accounts` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_accounts` (
   `rewardlabs_account_id` varchar(50) NOT NULL DEFAULT '',
   `sponsor_id` varchar(50) DEFAULT NULL COMMENT 'Sponsor''s account_number',
   `user_id` int(11) NOT NULL,
@@ -50,7 +50,7 @@ CREATE TABLE `#__rewardlabs_accounts` (
 
 DROP TABLE IF EXISTS `#__rewardlabs_cartitems`;
 
-CREATE TABLE `#__rewardlabs_cartitems` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_cartitems` (
   `rewardlabs_cartitem_id` int(11) NOT NULL AUTO_INCREMENT,
   `cart_id` int(11) NOT NULL,
   `row` int(11) NOT NULL,
@@ -59,7 +59,7 @@ CREATE TABLE `#__rewardlabs_cartitems` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `#__rewardlabs_carts` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_carts` (
   `rewardlabs_cart_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer` varchar(50) NOT NULL,
   `recipient_name` varchar(255) NOT NULL,
@@ -77,7 +77,7 @@ CREATE TABLE `#__rewardlabs_carts` (
   PRIMARY KEY (`rewardlabs_cart_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__rewardlabs_cities` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_cities` (
   `rewardlabs_city_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `province_id` int(11) unsigned NOT NULL,
@@ -1729,7 +1729,7 @@ VALUES
 /*!40000 ALTER TABLE `#__rewardlabs_cities` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE `#__rewardlabs_configs` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_configs` (
   `rewardlabs_config_id` int(11) NOT NULL AUTO_INCREMENT,
   `item` varchar(255) NOT NULL COMMENT 'Configuration item',
   `value` longtext NOT NULL COMMENT 'Configuration item value',
@@ -1752,7 +1752,7 @@ VALUES
 /*!40000 ALTER TABLE `#__rewardlabs_configs` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE `#__rewardlabs_employeeaccounts` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_employeeaccounts` (
   `rewardlabs_employee_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL COMMENT 'Foreign key to users table',
   `EmployeeRef` int(11) NOT NULL,
@@ -1781,7 +1781,7 @@ CREATE TABLE `#__rewardlabs_employeeaccounts` (
   UNIQUE KEY `nucleonplus_account_id` (`rewardlabs_employee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__rewardlabs_orderitems` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_orderitems` (
   `rewardlabs_orderitem_id` int(11) NOT NULL AUTO_INCREMENT,
   `order_id` int(11) NOT NULL,
   `ItemRef` int(11) NOT NULL,
@@ -1797,7 +1797,7 @@ CREATE TABLE `#__rewardlabs_orderitems` (
   PRIMARY KEY (`rewardlabs_orderitem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__rewardlabs_orders` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_orders` (
   `rewardlabs_order_id` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(50) NOT NULL DEFAULT '',
   `order_status` varchar(50) NOT NULL,
@@ -1830,7 +1830,7 @@ CREATE TABLE `#__rewardlabs_orders` (
   KEY `account_id` (`account`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__rewardlabs_payouts` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_payouts` (
   `rewardlabs_payout_id` int(11) NOT NULL AUTO_INCREMENT,
   `account` varchar(50) NOT NULL DEFAULT '',
   `direct_referrals` decimal(10,2) NOT NULL COMMENT 'Total amount of referral bonus and rebates',
@@ -1850,7 +1850,7 @@ CREATE TABLE `#__rewardlabs_payouts` (
   PRIMARY KEY (`rewardlabs_payout_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `#__rewardlabs_provinces` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_provinces` (
   `rewardlabs_province_id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `name` varchar(300) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`rewardlabs_province_id`)
@@ -1945,7 +1945,7 @@ VALUES
 /*!40000 ALTER TABLE `#__rewardlabs_provinces` ENABLE KEYS */;
 UNLOCK TABLES;
 
-CREATE TABLE `#__rewardlabs_rewards` (
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_rewards` (
   `rewardlabs_reward_id` int(11) NOT NULL AUTO_INCREMENT,
   `item` int(11) NOT NULL COMMENT 'The Order''s Reward of other Member that pays the account_id',
   `account` varchar(50) NOT NULL DEFAULT '' COMMENT 'Account ID of the Referrer',
