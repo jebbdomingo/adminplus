@@ -65,7 +65,7 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
                         'merchantTxnId' => 'id',
                         'userName'      => '_account_bank_account_name',
                         'amount'        => 'amount',
-                        'procDetail'    => '_account_bank_account_number',
+                        'procDetail'    => '_account_bank_account',
                         'email'         => 'email',
                         'mobileNo'      => '_account_mobile',
                         'runDate'       => 'run_date',
