@@ -77,7 +77,6 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
         }
         catch (Exception $e)
         {
-            var_dump($e->getMessage());die;
             // Transform error message to THIS_FORMAT
             $result = 'result=' . str_replace(' ', '_', strtoupper($e->getMessage()));
         }
