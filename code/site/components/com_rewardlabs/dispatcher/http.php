@@ -67,9 +67,7 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
 
     protected function _updatePayoutStatus($query)
     {
-        $config    = $this->getObject('com://site/rewardlabs.model.configs')->item('dragonpay')->fetch();
-        $dragonpay = $config->getJsonValue();
-        $result    = 'result=OK';
+        $result = 'result=OK';
 
         try
         {
