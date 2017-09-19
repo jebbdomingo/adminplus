@@ -16,7 +16,7 @@ class ComRewardlabsModelPayouts extends KModelDatabase
 
         $this->getState()
             ->insert('account', 'string')
-            ->insert('status', 'string')
+            ->insert('type', 'string')
             ->insert('search', 'string')
             ->insert('created_on', 'string')
             ->insert('payout_method', 'string')
@@ -59,8 +59,8 @@ class ComRewardlabsModelPayouts extends KModelDatabase
             $query->where('tbl.account = :account')->bind(['account' => $state->account]);
         }
 
-        if ($state->status) {
-            $query->where('tbl.status = :status')->bind(['status' => $state->status]);
+        if ($state->type) {
+            $query->where('tbl.type IN :type')->bind(array('type' => (array) $state->type));
         }
 
         if ($state->payout_method) {

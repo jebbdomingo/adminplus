@@ -171,59 +171,28 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
             foreach ($payouts as $payout)
             {
                 // Rebates amount
-                $rebates = $this->getObject('com:rewardlabs.model.rebates')
-                    ->payout_id($payout->id)
+                $rebates = $this->getObject('com://site/rewardlabs.model.rewards')
+                    ->type('rebates')
                     ->fetch()
+                    ->points
                 ;
-                $rebatesAmount = 0;
-                foreach ($rebates as $rebate) {
-                    $rebatesAmount += $rebate->points;
-                }
 
-                // Direct referral bonus amount
-                $drBonuses = $this->getObject('com:rewardlabs.model.directreferrals')
-                    ->payout_id($payout->id)
+                // Direct referral amount
+                $direct_referrals = $this->getObject('com://site/rewardlabs.model.rewards')
+                    ->type('direct_referral')
                     ->fetch()
+                    ->points
                 ;
-                $drBonusAmount = 0;
-                foreach ($drBonuses as $drBonus) {
-                    $drBonusAmount += $drBonus->points;
-                }
 
-                // Commission amount
-                $commission = $this->getObject('com:rewardlabs.model.patronagebonuses')
-                    ->payout_id($payout->id)
+                // Indirect referral amount
+                $indirect_referrals = $this->getObject('com://site/rewardlabs.model.rewards')
+                    ->type('indirect_referral')
                     ->fetch()
+                    ->points
                 ;
-                $commAmount = 0;
-                foreach ($commission as $comm) {
-                    $commAmount += $comm->points;
-                }
 
-                // Unilevel direct referral amount
-                $directReferral = $this->getObject('com:rewardlabs.model.referralbonuses')
-                    ->payout_id($payout->id)
-                    ->referral_type('dr')
-                    ->fetch()
-                ;
-                $drAmount = 0;
-                foreach ($directReferral as $dr) {
-                    $drAmount += $dr->points;
-                }
-
-                // Unilevel indirect referral amount
-                $indirectReferral = $this->getObject('com:rewardlabs.model.referralbonuses')
-                    ->payout_id($payout->id)
-                    ->referral_type('ir')
-                    ->fetch()
-                ;
-                $irAmount = 0;
-                foreach ($indirectReferral as $ir) {
-                    $irAmount += $ir->points;
-                }
-
-                // Validate commissions/referral payout computation
-                $total = ($rebatesAmount + $drBonusAmount + $commAmount + $drAmount + $irAmount);
+                // Validate
+                $total = ($rebates + $direct_referrals + $indirect_referrals);
 
                 if ($total != $payout->amount) {
                     throw new Exception("There is a discrepancy in the Payout Request. Payout #{$payout->id}");

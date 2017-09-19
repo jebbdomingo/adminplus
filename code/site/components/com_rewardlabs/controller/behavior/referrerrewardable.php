@@ -57,7 +57,6 @@ class ComRewardlabsControllerBehaviorReferrerrewardable extends KControllerBehav
         if ($entity->_account_sponsor_id)
         {
             $data = array(
-                'account'  => $entity->_account_number,
                 'referrer' => $entity->_account_sponsor_id,
                 'items'    => $items,
             );
