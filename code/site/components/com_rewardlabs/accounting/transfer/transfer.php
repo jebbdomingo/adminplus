@@ -12,7 +12,7 @@
 /**
  * @todo Implement a local queue of accounting/inventory transactions in case of trouble connecting to accounting system
  */
-class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewardlabsAccountingServiceTransferInterface
+class ComRewardlabsAccountingTransfer extends KObject implements ComRewardlabsAccountingTransferInterface
 {
     /**
      * Is queue
@@ -83,8 +83,8 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
         $data = $this->getObject('com:rewardlabs.accounting.data');
 
         $config->append(array(
-            'transfer_service'                  => 'com:qbsync.service.transfer',
-            'transfer_controller'               => 'com:qbsync.controller.transfer',
+            'transfer_service'                  => 'com://admin/qbsync.service.transfer',
+            'transfer_controller'               => 'com://admin/qbsync.controller.transfer',
             'online_payments_account'           => $data->ACCOUNT_ONLINE_PAYMENTS,
             'savings_account'                   => $data->ACCOUNT_BANK_REF,
             'checking_account'                  => $data->ACCOUNT_CHECKING_REF,
@@ -107,18 +107,18 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
     /**
      * Record online payment remittance
      * 
-     * @param integer $entityId
+     * @param integer $entity_id
      * @param decimal $amount
      *
      * @return KModelEntityInterface
      */
-    public function depositOnlinePayment($entityId, $amount)
+    public function depositOnlinePayment($entity_id, $amount)
     {
         $sourceAccount = $this->_online_payments_account;
         $targetAccount = $this->_savings_account;
         $note          = 'Deposit from online payment processing network';
 
-        return $this->_transfer('payout', $entityId, $sourceAccount, $targetAccount, $amount, $note);
+        return $this->_transfer('payout', $entity_id, $sourceAccount, $targetAccount, $amount, $note);
     }
 
     // /**
@@ -137,82 +137,55 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
     // }
 
     /**
-     * @param integer $entityId
+     * @param integer $entity_id
      * @param decimal $amount
      *
      * @return KModelEntityInterface
      */
-    public function rebatesCheck($entityId, $amount)
+    public function rebatesCheck($entity_id, $amount)
     {
         $sourceAccount = $this->_savings_account;
         $targetAccount = $this->_checking_account;
         $note          = 'Rebates Check';
 
-        $transfer = $this->_transfer('payout', $entityId, $sourceAccount, $targetAccount, $amount, $note);
-
-        // Try to sync
-        if ($transfer->sync() == false)
-        {
-            $error = $transfer->getStatusMessage();
-            throw new KControllerExceptionActionFailed($error ? $error : "Sync Error: Transfer #{$transfer->id}");
-        }
-
-        return $transfer;
+        return $this->_transfer('payout', $entity_id, $sourceAccount, $targetAccount, $amount, $note);
     }
 
     /**
-     * @param integer $entityId
+     * @param integer $entity_id
      * @param decimal $amount
      *
      * @return KModelEntityInterface
      */
-    public function directReferralCheck($entityId, $amount)
+    public function directReferralCheck($entity_id, $amount)
     {
         $sourceAccount = $this->_savings_account;
         $targetAccount = $this->_checking_account;
         $note          = 'Unilevel Direct Referral Check';
 
-        $transfer = $this->_transfer('payout', $entityId, $sourceAccount, $targetAccount, $amount, $note);
-
-        // Try to sync
-        if ($transfer->sync() == false)
-        {
-            $error = $transfer->getStatusMessage();
-            throw new KControllerExceptionActionFailed($error ? $error : "Sync Error: Transfer #{$transfer->id}");
-        }
-
-        return $transfer;
+        return $this->_transfer('payout', $entity_id, $sourceAccount, $targetAccount, $amount, $note);
     }
 
     /**
-     * @param integer $entityId
+     * @param integer $entity_id
      * @param decimal $amount
      *
      * @return KModelEntityInterface
      */
-    public function indirectReferralCheck($entityId, $amount)
+    public function indirectReferralCheck($entity_id, $amount)
     {
         $sourceAccount = $this->_savings_account;
         $targetAccount = $this->_checking_account;
         $note          = 'Unilevel Indirect Referral Check';
 
-        $transfer = $this->_transfer('payout', $entityId, $sourceAccount, $targetAccount, $amount, $note);
-        
-        // Try to sync
-        if ($transfer->sync() == false)
-        {
-            $error = $transfer->getStatusMessage();
-            throw new KControllerExceptionActionFailed($error ? $error : "Sync Error: Transfer #{$transfer->id}");
-        }
-
-        return $transfer;
+        return $this->_transfer('payout', $entity_id, $sourceAccount, $targetAccount, $amount, $note);
     }
 
     /**
      * Transfer funds
      * 
      * @param string  $entity
-     * @param integer $entityId
+     * @param integer $entity_id
      * @param integer $fromAccount
      * @param integer $toAccount
      * @param decimal $amount
@@ -222,7 +195,7 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
      *
      * @return KModelEntityInterface|string
      */
-    protected function _transfer($entity, $entityId, $fromAccount, $toAccount, $amount, $note = null)
+    protected function _transfer($entity, $entity_id, $fromAccount, $toAccount, $amount, $note = null)
     {
         if ($this->_disabled) {
             return false;
@@ -232,12 +205,12 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
         {
             return $this->_controller->add(array(
                 'entity'         => $entity,
-                'entity_id'      => $entityId,
+                'entity_id'      => $entity_id,
                 'FromAccountRef' => $fromAccount,
                 'ToAccountRef'   => $toAccount,
                 'Amount'         => $amount,
                 'TxnDate'        => date('Y-m-d'),
-                'PrivateNote'    => "{$entityId}_{$note}"
+                'PrivateNote'    => "{$entity_id}_{$note}"
             ));
         }
         else
@@ -247,7 +220,7 @@ class ComRewardlabsAccountingServiceTransfer extends KObject implements ComRewar
                 'ToAccountRef'   => $toAccount,
                 'Amount'         => $amount,
                 'TxnDate'        => date('Y-m-d'),
-                'PrivateNote'    => "{$entityId}_{$note}"
+                'PrivateNote'    => "{$entity_id}_{$note}"
             ));
         }
     }

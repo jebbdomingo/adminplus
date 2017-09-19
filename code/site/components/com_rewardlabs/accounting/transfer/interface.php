@@ -13,69 +13,37 @@
  * 
  * @author Jebb Domingo <https://github.com/jebbdomingo>
  */
-interface ComRewardlabsAccountingServiceTransferInterface
+interface ComRewardlabsAccountingTransferInterface
 {
     /**
-     * @param integer $orderId
+     * @param integer $entity_Id
      * @param decimal $amount
      *
      * @return mixed
      */
-    public function allocatePatronage($orderId, $amount);
+    public function depositOnlinePayment($entity_Id, $amount);
 
     /**
-     * @param integer $orderId
+     * @param integer $entity_Id
      * @param decimal $amount
      *
      * @return mixed
      */
-    public function allocateSurplusPatronage($orderId, $amount);
+    public function rebatesCheck($entity_Id, $amount);
 
     /**
-     * @param integer $orderId
+     * @param integer $entity_Id
      * @param decimal $amount
      *
      * @return mixed
      */
-    public function allocateDRBonus($orderId, $amount);
+    public function directReferralCheck($entity_Id, $amount);
 
     /**
-     * @param integer $orderId
+     * @param integer $entity_Id
      * @param decimal $amount
      *
      * @return mixed
      */
-    public function allocateIRBonus($orderId, $amount);
-
-    /**
-     * @param integer $orderId
-     * @param decimal $amount
-     *
-     * @return mixed
-     */
-    public function allocateSurplusDRBonus($orderId, $amount);
-
-    /**
-     * @param integer $orderId
-     * @param decimal $amount
-     *
-     * @return mixed
-     */
-    public function allocateSurplusIRBonus($orderId, $amount);
-
-    /**
-     * @param integer $orderId
-     * @param decimal $amount
-     *
-     * @return mixed
-     */
-    public function allocateCharges($orderId, $amount);
-
-    /**
-     * @param integer $orderId
-     * @param decimal $amount
-     *
-     * @return mixed
-     */
-    public function allocateDeliveryExpense($orderId, $amount);
+    public function indirectReferralCheck($entity_Id, $amount);
 }

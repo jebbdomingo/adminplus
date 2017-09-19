@@ -29,21 +29,18 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
         
         parent::__construct($config);
 
-        $this->addCommandCallback('before.processing', '_validatePayout');
         $this->addCommandCallback('before.processing', '_validateProcessing');
-        $this->addCommandCallback('before.generatecheck', '_validatePayout');
         $this->addCommandCallback('before.generatecheck', '_validateCheckgenerated');
-        $this->addCommandCallback('before.disburse', '_validatePayout');
         $this->addCommandCallback('before.disburse', '_validateDisburse');
 
         // Sales Receipt Service
         $identifier = $this->getIdentifier($config->accounting_service);
         $service    = $this->getObject($identifier);
 
-        if (!($service instanceof ComRewardlabsAccountingJournalInterface))
+        if (!($service instanceof ComRewardlabsAccountingTransferInterface))
         {
             throw new UnexpectedValueException(
-                "Service $identifier does not implement ComRewardlabsAccountingJournalInterface"
+                "Service $identifier does not implement ComRewardlabsAccountingTransferInterface"
             );
         }
         else $this->_accounting_service = $service;
@@ -60,7 +57,7 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'accounting_service' => 'com:rewardlabs.accounting.journal',
+            'accounting_service' => 'com://site/rewardlabs.accounting.transfer',
             'behaviors'          => array(
                 'com://admin/dragonpay.controller.behavior.masspayable' => array(
                     'actions'    => array('after.processing'),
@@ -139,63 +136,6 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
             {
                 if ($payout->status <> ComRewardlabsModelEntityPayout::PAYOUT_STATUS_PROCESSING) {
                     throw new KControllerExceptionRequestInvalid($translator->translate("Invalid Payout Status: Payout # {$payout->id} is not in processing"));
-                }
-            }
-        }
-        catch(Exception $e)
-        {
-            $context->getResponse()->setRedirect($this->getRequest()->getReferrer(), $e->getMessage(), 'error');
-            $context->getResponse()->send();
-        }
-    }
-
-    /**
-     * Validate payout
-     *
-     * @param KControllerContextInterface $context
-     * 
-     * @return KModelEntityInterface
-     */
-    protected function _validatePayout(KControllerContextInterface $context)
-    {
-        if (!$context->result instanceof KModelEntityInterface) {
-            $payouts = $this->getModel()->fetch();
-        } else {
-            $payouts = $context->result;
-        }
-
-        try
-        {
-            $translator = $this->getObject('translator');
-
-            foreach ($payouts as $payout)
-            {
-                // Rebates amount
-                $rebates = $this->getObject('com://site/rewardlabs.model.rewards')
-                    ->type('rebates')
-                    ->fetch()
-                    ->points
-                ;
-
-                // Direct referral amount
-                $direct_referrals = $this->getObject('com://site/rewardlabs.model.rewards')
-                    ->type('direct_referral')
-                    ->fetch()
-                    ->points
-                ;
-
-                // Indirect referral amount
-                $indirect_referrals = $this->getObject('com://site/rewardlabs.model.rewards')
-                    ->type('indirect_referral')
-                    ->fetch()
-                    ->points
-                ;
-
-                // Validate
-                $total = ($rebates + $direct_referrals + $indirect_referrals);
-
-                if ($total != $payout->amount) {
-                    throw new Exception("There is a discrepancy in the Payout Request. Payout #{$payout->id}");
                 }
             }
         }
