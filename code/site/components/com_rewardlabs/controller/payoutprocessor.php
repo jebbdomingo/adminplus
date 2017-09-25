@@ -24,8 +24,13 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
     protected function _validatePayout(KControllerContextInterface $context)
     {
-        $data   = $context->request->data;
-        $payout = $this->getObject('com://site/rewardlabs.model.payouts')->id($data->txnid)->fetch();
+        $query         = $context->request->query;
+        $merchantTxnId = $query->get('merchantTxnId', 'int');
+        $refNo         = $query->get('refNo', 'cmd');
+        $status        = $query->get('status', 'cmd');
+        $message       = $query->get('message', 'string');
+
+        $payout = $this->getObject('com://site/rewardlabs.model.payouts')->id($merchantTxnId)->fetch();
 
         // Validate payout
         if (!count($payout)) {
@@ -36,16 +41,16 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         $config     = $this->getObject('com://site/rewardlabs.model.configs')->item('dragonpay')->fetch();
         $dragonpay  = $config->getJsonValue();
         $parameters = array(
-            'txnid'    => $data->txnid,
-            'refno'    => $data->refno,
-            'status'   => $data->status,
-            'message'  => $data->message,
-            'password' => $dragonpay->password
+            'merchantTxnId' => $merchantTxnId,
+            'refNo'         => $refNo,
+            'status'        => $status,
+            'message'       => $message,
+            'password'      => $dragonpay->password
         );
         $digestStr = implode(':', $parameters);
         $digest    = sha1($digestStr);
 
-        if ($data->digest !== $digest)
+        if ($query->get('digest', 'cmd') !== $digest)
         {
             if (getenv('APP_ENV') != 'production') {
                 var_dump($digest);
@@ -57,16 +62,20 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
     protected function _actionUpdatepayoutstatus(KControllerContextInterface $context)
     {
-        $data = $context->request->data;
+        $query         = $context->request->query;
+        $merchantTxnId = $query->get('merchantTxnId', 'int');
+        $status        = $query->get('status', 'cmd');
 
         // Record dragonpay payout status
-        $this->_recordPayoutStatus($data);
+        $this->_recordPayoutStatus($query);
 
-        switch ($data->status) {
+        switch ($status) {
             case ComDragonpayModelEntityPayout::STATUS_SUCCESSFUL:
-                $data->id = $data->txnid;
+                $payout = $this->getObject('com://site/rewardlabs.model.payouts')
+                    ->id($merchantTxnId)
+                    ->fetch()
+                ;
 
-                $payout = $this->getObject('com://site/rewardlabs.model.payouts')->id($data->id)->fetch();
                 $payout->status = ComNucleonplusModelEntityPayout::PAYOUT_STATUS_DISBURSED;
                 $payout->save();
                 
@@ -78,16 +87,17 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         }
     }
 
-    protected function _recordPayoutStatus($data)
+    protected function _recordPayoutStatus($query)
     {
-        $controller = $this->getObject('com://admin/dragonpay.controller.payout');
-        $payout     = $controller->getModel()->id($data->txnid)->count();
+        $merchantTxnId = $query->get('merchantTxnId', 'int');
+        $controller    = $this->getObject('com://admin/dragonpay.controller.payout');
+        $payout        = $controller->getModel()->txnid($merchantTxnId)->count();
 
         if ($payout)
         {
             $controller
-                ->id($data->txnid)
-                ->edit($data->toArray())
+                ->txnid($merchantTxnId)
+                ->edit($query->toArray())
             ;
         }
     }

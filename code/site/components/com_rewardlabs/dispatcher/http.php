@@ -67,13 +67,15 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
 
     protected function _updatePayoutStatus($query)
     {
-        $result = 'result=OK';
+        $result = 'result=FAILED';
 
         try
         {
             $controller = $this->getObject('com://site/rewardlabs.controller.payoutprocessor');
             $controller->id($query->txnid);
             $controller->updatepayoutstatus($query->toArray());
+
+            $result = 'result=OK';
         }
         catch (Exception $e)
         {

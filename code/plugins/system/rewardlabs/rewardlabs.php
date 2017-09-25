@@ -23,6 +23,8 @@ class PlgSystemRewardlabs extends JPlugin
                 $context->getTarget()->setContent($this->_renderToolbar().$context->getTarget()->getContent());
             }
         }, KEvent::PRIORITY_LOW);
+
+        $this->_logHttpRequests();
     }
 
     /**
@@ -146,6 +148,20 @@ class PlgSystemRewardlabs extends JPlugin
             ->render();
 
         return $html;
+    }
+
+    protected function _logHttpRequests()
+    {
+        $request  = $this->getObject('request');
+        $data     = json_encode($request->query->toArray());
+        $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+
+        $log = $this->getObject('com://site/rewardlabs.model.httplogs')->create(array(
+            'referrer' => $referrer,
+            'request_data' => $data
+        ));
+
+        $log->save();
     }
 
     /**
