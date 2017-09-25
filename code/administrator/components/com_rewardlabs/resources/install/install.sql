@@ -1959,6 +1959,19 @@ CREATE TABLE IF NOT EXISTS `#__rewardlabs_rewards` (
   PRIMARY KEY (`rewardlabs_reward_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE IF NOT EXISTS `#__rewardlabs_httplogs` (
+  `rewardlabs_httplog_id` int(11) NOT NULL AUTO_INCREMENT,
+  `referrer` varchar(255) DEFAULT '',
+  `message` text,
+  `url_query` varchar(255) DEFAULT NULL,
+  `request_data` text,
+  `created_by` int(11) NOT NULL,
+  `created_on` datetime NOT NULL,
+  `modified_by` int(11) NOT NULL,
+  `modified_on` datetime NOT NULL,
+  PRIMARY KEY (`rewardlabs_httplog_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

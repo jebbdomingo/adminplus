@@ -57,3 +57,7 @@ DROP TABLE IF EXISTS `#__rewardlabs_payouts`;
 -- --------------------------------------------------------
 
 DROP TABLE IF EXISTS `#__rewardlabs_rewards`;
+
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `#__rewardlabs_httplogs`;

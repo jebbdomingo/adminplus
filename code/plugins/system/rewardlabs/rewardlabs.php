@@ -152,13 +152,15 @@ class PlgSystemRewardlabs extends JPlugin
 
     protected function _logHttpRequests()
     {
-        $request  = $this->getObject('request');
-        $data     = json_encode($request->query->toArray());
-        $referrer = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+        $request      = $this->getObject('request');
+        $url_query    = json_encode($request->query->toArray());
+        $request_data = json_encode($request->toString());
+        $referrer     = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
         $log = $this->getObject('com://site/rewardlabs.model.httplogs')->create(array(
-            'referrer' => $referrer,
-            'request_data' => $data
+            'referrer'     => $referrer,
+            'request_data' => $request_data,
+            'url_query'    => $url_query,
         ));
 
         $log->save();

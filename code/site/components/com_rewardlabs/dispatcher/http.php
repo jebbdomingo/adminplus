@@ -83,6 +83,20 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
             $result = 'result=' . str_replace(' ', '_', strtoupper($e->getMessage()));
         }
 
+        $request      = parent::getRequest();
+        $url_query    = json_encode($request->query->toArray());
+        $request_data = json_encode($request->toString());
+        $referrer     = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
+
+        $log = $this->getObject('com://site/rewardlabs.model.httplogs')->create(array(
+            'referrer'     => $referrer,
+            'request_data' => $request_data,
+            'url_query'    => $url_query,
+            'message'      => $result
+        ));
+
+        $log->save();
+
         exit("{$result}");
     }
 }
