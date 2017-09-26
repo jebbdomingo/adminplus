@@ -154,7 +154,7 @@ class PlgSystemRewardlabs extends JPlugin
     {
         $request      = $this->getObject('request');
         $url_query    = json_encode($request->query->toArray());
-        $request_data = json_encode($request->toString());
+        $request_data = $request->toString();
         $referrer     = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
         $log = $this->getObject('com://site/rewardlabs.model.httplogs')->create(array(

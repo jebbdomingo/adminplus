@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <view title="Dragonpay Payout Postback">
+        <message>Dragonpay Payout Notification Postback URL</message>
+        <options var="api">
+            <default name="Dragonpay Webhooks" msg="Choose dragonpay available webhooks">payment</default>
+        </options>
+    </view>
+    <fields name="request">
+        <fieldset name="request">
+            <field name="api" type="list" default="payout" label="API">
+                <option value="payment">Payment</option>
+                <option value="payout">Payout</option>
+            </field>
+            <field name="switch" type="list" default="postback" label="Switch">
+                <option value="returnurl">Return URL</option>
+                <option value="postback">Postback</option>
+            </field>
+        </fieldset>
+    </fields>
+</metadata>

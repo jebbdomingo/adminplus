@@ -46,8 +46,12 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
             $query->id = (int) $id;
         }
 
+        $view   = $query->get('view', 'cmd');
+        $api    = $query->get('api', 'cmd');
+        $switch = $query->get('switch', 'cmd');
+
         // Update payout status
-        if ($query->view == 'dragonpay' && $query->api == 'payout' && $query->switch == 'postback' && $request->getMethod() == 'GET') {
+        if ($view == 'dragonpay' && $api == 'payout' && $switch == 'postback' && $request->getMethod() == 'GET') {
             $this->_updatePayoutStatus($query);
         }
 
@@ -85,7 +89,7 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
 
         $request      = parent::getRequest();
         $url_query    = json_encode($request->query->toArray());
-        $request_data = json_encode($request->toString());
+        $request_data = $request->toString();
         $referrer     = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : null;
 
         $log = $this->getObject('com://site/rewardlabs.model.httplogs')->create(array(
