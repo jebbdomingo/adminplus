@@ -29,6 +29,7 @@
         <folder>controller</folder>
         <folder>database</folder>
         <folder>dispatcher</folder>
+        <folder>language</folder>
         <folder>model</folder>
         <folder>resources</folder>
         <folder>service</folder>
