@@ -92,15 +92,13 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
     protected function _recordPayoutStatus($data)
     {
         $merchantTxnId = $data->get('merchantTxnId', 'int');
-        $controller    = $this->getObject('com://admin/dragonpay.controller.payout');
-        $payout        = $controller->getModel()->txnid($merchantTxnId)->count();
+        $model         = $this->getObject('com://admin/dragonpay.model.payout');
+        $payout        = $model->txnid($merchantTxnId)->fetch();
 
-        if ($payout)
+        if (count($payout))
         {
-            $controller
-                ->txnid($merchantTxnId)
-                ->edit($data->toArray())
-            ;
+            $payout->setProperties($data->toArray());
+            $payout->save();
         }
     }
 
