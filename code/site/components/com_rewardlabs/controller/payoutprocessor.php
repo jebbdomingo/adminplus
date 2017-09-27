@@ -24,11 +24,12 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
     protected function _validatePayout(KControllerContextInterface $context)
     {
-        $query         = $context->request->query;
-        $merchantTxnId = $query->get('merchantTxnId', 'int');
-        $refNo         = $query->get('refNo', 'cmd');
-        $status        = $query->get('status', 'cmd');
-        $message       = $query->get('message', 'string');
+        $data = $context->request->data;
+
+        $merchantTxnId = $data->get('merchantTxnId', 'int');
+        $refNo         = $data->get('refNo', 'cmd');
+        $status        = $data->get('status', 'cmd');
+        $message       = $data->get('message', 'string');
 
         $payout = $this->getObject('com://site/rewardlabs.model.payouts')->id($merchantTxnId)->fetch();
 
@@ -40,17 +41,18 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         // Validate digest from dragonpay
         $config     = $this->getObject('com://site/rewardlabs.model.configs')->item('dragonpay')->fetch();
         $dragonpay  = $config->getJsonValue();
+        $password   = getenv('APP_ENV') == 'production' ? $dragonpay->password : $dragonpay->password_test;
         $parameters = array(
             'merchantTxnId' => $merchantTxnId,
             'refNo'         => $refNo,
             'status'        => $status,
             'message'       => $message,
-            'password'      => $dragonpay->password
+            'password'      => $password
         );
         $digestStr = implode(':', $parameters);
         $digest    = sha1($digestStr);
 
-        if ($query->get('digest', 'cmd') !== $digest)
+        if ($data->get('digest', 'cmd') !== $digest)
         {
             if (getenv('APP_ENV') != 'production') {
                 var_dump($digest);
@@ -62,12 +64,12 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
     protected function _actionUpdatepayoutstatus(KControllerContextInterface $context)
     {
-        $query         = $context->request->query;
-        $merchantTxnId = $query->get('merchantTxnId', 'int');
-        $status        = $query->get('status', 'cmd');
+        $data          = $context->request->data;
+        $merchantTxnId = $data->get('merchantTxnId', 'int');
+        $status        = $data->get('status', 'cmd');
 
         // Record dragonpay payout status
-        $this->_recordPayoutStatus($query);
+        $this->_recordPayoutStatus($data);
 
         switch ($status) {
             case ComDragonpayModelEntityPayout::STATUS_SUCCESSFUL:
@@ -76,7 +78,7 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
                     ->fetch()
                 ;
 
-                $payout->status = ComNucleonplusModelEntityPayout::PAYOUT_STATUS_DISBURSED;
+                $payout->status = ComRewardlabsModelEntityPayout::PAYOUT_STATUS_DISBURSED;
                 $payout->save();
                 
                 $this->_sendMail($payout);
@@ -87,9 +89,9 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         }
     }
 
-    protected function _recordPayoutStatus($query)
+    protected function _recordPayoutStatus($data)
     {
-        $merchantTxnId = $query->get('merchantTxnId', 'int');
+        $merchantTxnId = $data->get('merchantTxnId', 'int');
         $controller    = $this->getObject('com://admin/dragonpay.controller.payout');
         $payout        = $controller->getModel()->txnid($merchantTxnId)->count();
 
@@ -97,7 +99,7 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         {
             $controller
                 ->txnid($merchantTxnId)
-                ->edit($query->toArray())
+                ->edit($data->toArray())
             ;
         }
     }
@@ -116,9 +118,10 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         $config = JFactory::getConfig();
         $mail   = JFactory::getMailer()->sendMail($config->get('mailfrom'), $config->get('fromname'), $payout->email, $emailSubject, $emailBody);
 
+
         // Check for an error.
         if ($mail !== true) {
-            $context->response->addMessage(JText::_('COM_REWARDLABS_PAYOUT_EMAIL_SEND_MAIL_FAILED'), 'error');
+            $this->getContext()->response->addMessage(JText::_('COM_REWARDLABS_PAYOUT_EMAIL_SEND_MAIL_FAILED'), 'error');
         }
     }
 }
