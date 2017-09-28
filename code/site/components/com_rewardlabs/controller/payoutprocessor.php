@@ -99,7 +99,8 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         {
             $data = array(
                 'status'  => $data->get('status', 'cmd'),
-                'message' => $data->get('message', 'string')
+                'message' => $data->get('message', 'string'),
+                'refno'   => $data->get('refNo', 'cmd'),
             );
 
             $payout->setProperties($data);
