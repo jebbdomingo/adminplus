@@ -42,7 +42,7 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
             'behaviors' => array(
                 'com://admin/dragonpay.controller.behavior.masspayable' => array(
                     'actions'        => array('after.processing'),
-                    'onErrorCallack' => array('onProcessingError'), // Entity method to call when dragonpay payout failed
+                    'onErrorCallack' => 'onProcessingError', // Entity method to call when dragonpay payout failed
                     'columns'        => array(
                         'merchantTxnId' => 'id',
                         'userName'      => '_account_bank_account_name',
