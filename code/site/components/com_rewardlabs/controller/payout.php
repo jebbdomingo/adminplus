@@ -212,8 +212,6 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
                 if ($payouts->save() === true) {
                     $context->response->setStatus(KHttpResponse::RESET_CONTENT);
                 }
-
-                $this->_fundCheck($payouts);
             }
             else throw new KControllerExceptionResourceNotFound('Resource could not be found');
         }
