@@ -66,7 +66,7 @@ class ComRewardlabsModelEntityPayout extends KModelEntityRow
      */
     public function onProcessingError()
     {
-        $this->status         = self::PAYOUT_STATUS_PROCESSING;
+        $this->status         = self::PAYOUT_STATUS_PENDING;
         $this->date_processed = null;
         $this->run_date       = null;
         $this->save();

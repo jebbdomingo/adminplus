@@ -119,15 +119,15 @@ class ComRewardlabsControllerBehaviorPayoutable extends KControllerBehaviorAbstr
                 try
                 {
                     if ($rebates > 0) {
-                        $this->_accounting_service->rebatesCheck($data['id', $rebates);
+                        $this->_accounting_service->rebatesCheck($data['id'], $rebates);
                     }
 
                     if ($direct_referrals > 0) {
-                        $this->_accounting_service->directReferralCheck($data['id', $direct_referrals);
+                        $this->_accounting_service->directReferralCheck($data['id'], $direct_referrals);
                     }
 
                     if ($indirect_referrals > 0) {
-                        $this->_accounting_service->indirectReferralCheck($data['id', $indirect_referrals);
+                        $this->_accounting_service->indirectReferralCheck($data['id'], $indirect_referrals);
                     }
                 }
                 catch(Exception $e)
