@@ -57,4 +57,18 @@ class ComRewardlabsModelEntityPayout extends KModelEntityRow
 
         return $direct_referrals + $indirect_referrals + $rebates;
     }
+
+    /**
+     * On processing failure
+     * Revert processing changes when processing failure in other systems. This is used in Dragonpay payout
+     *
+     * @return void
+     */
+    public function onProcessingError()
+    {
+        $this->status         = self::PAYOUT_STATUS_PROCESSING;
+        $this->date_processed = null;
+        $this->run_date       = null;
+        $this->save();
+    }
 }

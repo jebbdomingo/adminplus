@@ -13,12 +13,6 @@
 class ComRewardlabsControllerPayout extends ComKoowaControllerModel
 {
     /**
-     *
-     * @var ComRewardlabsAccountingServiceTransferInterface
-     */
-    protected $_accounting_service;
-
-    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -32,18 +26,6 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
         $this->addCommandCallback('before.processing', '_validateProcessing');
         $this->addCommandCallback('before.generatecheck', '_validateCheckgenerated');
         $this->addCommandCallback('before.disburse', '_validateDisburse');
-
-        // Sales Receipt Service
-        $identifier = $this->getIdentifier($config->accounting_service);
-        $service    = $this->getObject($identifier);
-
-        if (!($service instanceof ComRewardlabsAccountingTransferInterface))
-        {
-            throw new UnexpectedValueException(
-                "Service $identifier does not implement ComRewardlabsAccountingTransferInterface"
-            );
-        }
-        else $this->_accounting_service = $service;
     }
 
     /**
@@ -57,11 +39,11 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'accounting_service' => 'com://site/rewardlabs.accounting.transfer',
-            'behaviors'          => array(
+            'behaviors' => array(
                 'com://admin/dragonpay.controller.behavior.masspayable' => array(
-                    'actions'    => array('after.processing'),
-                    'columns'    => array(
+                    'actions'        => array('after.processing'),
+                    'onErrorCallack' => array('onProcessingError'), // Entity method to call when dragonpay payout failed
+                    'columns'        => array(
                         'merchantTxnId' => 'id',
                         'userName'      => '_account_bank_account_name',
                         'amount'        => 'amount',
@@ -69,6 +51,15 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
                         'email'         => 'email',
                         'mobileNo'      => '_account_mobile',
                         'runDate'       => 'run_date',
+                    )
+                ),
+                'payoutable' => array(
+                    'actions'    => array('after.processing'),
+                    'columns'    => array(
+                        'id'                 => 'id',
+                        'rebates'            => 'rebates',
+                        'direct_referrals'   => 'direct_referrals',
+                        'indirect_referrals' => 'indirect_referrals',
                     )
                 ),
                 'com://admin/dragonpay.controller.behavior.connectable' => array(
@@ -232,28 +223,6 @@ class ComRewardlabsControllerPayout extends ComKoowaControllerModel
         }
 
         return $payouts;
-    }
-
-    protected function _fundCheck($payouts)
-    {
-        foreach ($payouts as $payout)
-        {
-            $rebates            = (float) $payout->rebates;
-            $direct_referrals   = (float) $payout->direct_referrals;
-            $indirect_referrals = (float) $payout->indirect_referrals;
-
-            if ($rebates > 0) {
-                $this->_accounting_service->rebatesCheck($payout->id, $rebates);
-            }
-
-            if ($direct_referrals > 0) {
-                $this->_accounting_service->directReferralCheck($payout->id, $direct_referrals);
-            }
-
-            if ($indirect_referrals > 0) {
-                $this->_accounting_service->indirectReferralCheck($payout->id, $indirect_referrals);
-            }
-        }
     }
 
     /**
