@@ -41,7 +41,7 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
         // Validate digest from dragonpay
         $config     = $this->getObject('com://site/rewardlabs.model.configs')->item('dragonpay')->fetch();
         $dragonpay  = $config->getJsonValue();
-        $password   = getenv('APP_ENV') == 'production' ? $dragonpay->password : $dragonpay->password_test;
+        $password   = getenv('HTTP_APP_ENV') == 'production' ? $dragonpay->password : $dragonpay->password_test;
         $parameters = array(
             'merchantTxnId' => $merchantTxnId,
             'refNo'         => $refNo,
@@ -54,7 +54,7 @@ class ComRewardlabsControllerPayoutprocessor extends ComKoowaControllerModel
 
         if ($data->get('digest', 'cmd') !== $digest)
         {
-            if (getenv('APP_ENV') != 'production') {
+            if (getenv('HTTP_APP_ENV') != 'production') {
                 var_dump($digest);
             }
 
