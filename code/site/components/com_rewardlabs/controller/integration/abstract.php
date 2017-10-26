@@ -8,8 +8,22 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-abstract class ComRewardlabsControllerIntegrationAbstract extends ComKoowaControllerModel
+abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbstract
 {
+    /**
+     * Model
+     *
+     * @var string
+     */
+    protected $_model;
+
+    /**
+     * Identifier
+     *
+     * @var string
+     */
+    protected $_identifier_column;
+
     /**
      * Constructor.
      *
@@ -21,12 +35,38 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends ComKoowaContro
 
         $this->addCommandCallback('before.add', '_debug');
         $this->addCommandCallback('before.add', '_validate');
-        $this->addCommandCallback('before.add', '_mapColumns');
         $this->addCommandCallback('before.edit', '_debug');
         $this->addCommandCallback('before.edit', '_validate');
-        $this->addCommandCallback('before.edit', '_mapColumns');
         $this->addCommandCallback('before.delete', '_debug');
         $this->addCommandCallback('before.delete', '_validate');
+
+        $this->_identifier_column = $config->identifier_column;
+        $this->_model             = $config->model;
+    }
+
+    /**
+     * Initializes the default configuration for the object
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param   KObjectConfig $config Configuration options
+     * @return void
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'identifier_column' => null,
+            'model'             => null,
+        ));
+
+        parent::_initialize($config);
+
+        // Alter the permission of reward labs product controller
+        $config->append(array(
+            'behaviors' => array(
+                'permissible' => null
+            )
+        ));
     }
 
     protected function _validate(KControllerContextInterface $context)
@@ -47,5 +87,35 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends ComKoowaContro
     protected function _mapColumns(KControllerContextInterface $context)
     {
         return array();
+    }
+
+    protected function _actionAdd(KControllerContextInterface $context)
+    {
+        $this->_mapColumns($context);
+
+        $data = $context->request->data;
+
+        $entity = $this->getObject($this->_model)->create($data->toArray());
+        $entity->save();
+
+        return $entity;
+    }
+
+    protected function _actionEdit(KControllerContextInterface $context)
+    {
+        $this->_mapColumns($context);
+
+        $id   = $context->request->query->get($this->_identifier_column, 'cmd', false);
+        $data = $context->request->data;
+
+        $entity = $this->getObject($this->_model)->id($id)->fetch();
+
+        if (count($entity))
+        {
+            $entity->setProperties($data->toArray());
+            $entity->save();
+        }
+
+        return $entity;
     }
 }

@@ -11,20 +11,6 @@
 class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControllerIntegrationAbstract
 {
     /**
-     * Model
-     *
-     * @var string
-     */
-    protected $_model;
-
-    /**
-     * Identifier
-     *
-     * @var string
-     */
-    protected $_identifier_column;
-
-    /**
      * Columns
      *
      * @var array
@@ -40,9 +26,7 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
     {
         parent::__construct($config);
 
-        $this->_identifier_column = $config->identifier_column;
-        $this->_model             = $config->model;
-        $this->_columns           = KObjectConfig::unbox($config->columns);
+        $this->_columns = KObjectConfig::unbox($config->columns);
     }
 
     /**
@@ -97,6 +81,7 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
             $data[$column] = isset($content->$column) ? $content->$column : null;
         }
 
+
         $data['app']         = $app;
         $data['app_entity']  = $content->id;
         $data['Name']        = $content->name;
@@ -119,5 +104,6 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
         }
 
         $context->request->setData($data);
+
     }
 }
