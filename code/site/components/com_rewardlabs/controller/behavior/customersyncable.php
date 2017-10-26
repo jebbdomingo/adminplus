@@ -15,9 +15,31 @@ class ComRewardlabsControllerBehaviorCustomersyncable extends KControllerBehavio
     {
         parent::__construct($config);
 
-        $this->addCommandCallback('after.add', '_add');
-        $this->addCommandCallback('after.edit', '_update');
-        $this->addCommandCallback('after.delete', '_update');
+        $actions = KObjectConfig::unbox($config->actions);
+
+        foreach ($actions as $event => $action) {
+            $this->addCommandCallback($event, "_{$action}");
+        }
+    }
+
+    /**
+     * Initializes the options for the object.
+     *
+     * Called from {@link __construct()} as a first step of object instantiation.
+     *
+     * @param KObjectConfig $config Configuration options.
+     */
+    protected function _initialize(KObjectConfig $config)
+    {
+        $config->append(array(
+            'actions' => array(
+                'after.add'    => 'add',
+                'after.edit'   => 'update',
+                'after.delete' => 'update',
+            )
+        ));
+
+        parent::_initialize($config);
     }
 
     /**

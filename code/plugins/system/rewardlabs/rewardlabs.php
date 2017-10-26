@@ -24,7 +24,7 @@ class PlgSystemRewardlabs extends JPlugin
             }
         }, KEvent::PRIORITY_LOW);
 
-        $this->_logHttpRequests();
+        // $this->_logHttpRequests();
     }
 
     /**

@@ -51,8 +51,13 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
         $switch = $query->get('switch', 'cmd');
 
         // Update payout status
-        if ($view == 'dragonpay' && $api == 'payout' && $switch == 'postback' && $request->getMethod() == 'GET') {
+        if ($view == 'dragonpay' && $api == 'payout' && $switch == 'postback' && $request->getMethod() == 'POST') {
             $this->_updatePayoutStatus($query);
+        }
+
+
+        if ($query->get('routed', 'int')) {
+            $this->_runWebhook($request);
         }
 
         return $request;
@@ -100,6 +105,39 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
         ));
 
         $log->save();
+
+        exit("{$result}");
+    }
+
+    /**
+     * Required URL query routed=1&app=nucleonplus&controller=wooproduct&action=add
+     *
+     * @param  [type] $request [description]
+     *
+     * @return [type]          [description]
+     */
+    protected function _runWebhook($request)
+    {
+        $controller = $request->query->get('controller', 'cmd');
+        $action     = $request->query->get('action', 'cmd');
+        $app        = $request->query->get('app', 'cmd');
+        $result     = 'result=FAILED';
+
+        if ($controller && $action && $app)
+        {
+            try
+            {
+                $controller = $this->getObject("com://site/rewardlabs.controller.integration.{$controller}");
+                $controller->setRequest($request);
+                $controller->$action($request->data->toArray());
+                $result = 'result=OK';
+            }
+            catch (Exception $e)
+            {
+                // Transform error message to THIS_FORMAT
+                $result = 'result=' . str_replace(' ', '_', strtoupper($e->getMessage()));
+            }
+        }
 
         exit("{$result}");
     }

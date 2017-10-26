@@ -10,6 +10,17 @@
  */
 class ComRewardlabsModelMembers extends KModelDatabase
 {
+    public function __construct(KObjectConfig $config)
+    {
+        parent::__construct($config);
+
+        $this->getState()
+            ->insert('email'      , 'email' , null, true)
+            ->insert('username'   , 'email' , null, true)
+            ->insert('app'        , 'cmd'   , null, true)
+            ->insert('app_entity' , 'cmd'   , null, true);
+    }
+
     protected function _buildQueryColumns(KDatabaseQueryInterface $query)
     {
         parent::_buildQueryColumns($query);
@@ -44,5 +55,28 @@ class ComRewardlabsModelMembers extends KModelDatabase
         ;
 
         parent::_buildQueryJoins($query);
+    }
+
+    protected function _buildQueryWhere(KDatabaseQueryInterface $query)
+    {
+        $state = $this->getState();
+
+        if ($state->username) {
+            $query->where('username = :username')->bind(array('username' => $state->username));
+        }
+
+        if ($state->email) {
+            $query->where('email = :email')->bind(array('email' => $state->email));
+        }
+
+        if ($state->app) {
+            $query->where('app = :app')->bind(array('app' => $state->app));
+        }
+
+        if ($state->app_entity) {
+            $query->where('app_entity = :app_entity')->bind(array('app_entity' => $state->app_entity));
+        }
+
+        parent::_buildQueryWhere($query);
     }
 }
