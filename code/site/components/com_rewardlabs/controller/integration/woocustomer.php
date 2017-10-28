@@ -91,40 +91,6 @@ class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControl
         return true;
     }
 
-    // protected function _beforeAdd(KControllerContextInterface $context)
-    // {
-    //     $request = $context->request;
-    //     $query   = $request->query;
-    //     $content = json_decode($request->getContent());
-    //     $data    = array();
-
-    //     foreach ($this->_columns as $column) {
-    //         $data[$column] = isset($content->$column) ? $content->$column : null;
-    //     }
-
-    //     $data['name']       = isset($content->first_name) ? "{$content->first_name} {$content->last_name}" : $content->username;
-    //     $data['sponsor_id'] = isset($content->sponsor_id) ? $content->sponsor_id : null;
-
-    //     $context->request->setData($data);
-    // }
-
-    // protected function _beforeEdit(KControllerContextInterface $context)
-    // {
-    //     $request = $context->request;
-    //     $query   = $request->query;
-    //     $content = json_decode($request->getContent());
-    //     $data    = array();
-
-    //     foreach ($this->_columns as $column) {
-    //         $data[$column] = isset($content->$column) ? $content->$column : null;
-    //     }
-
-    //     $data['name']       = "{$content->first_name} {$content->last_name}";
-    //     $data['sponsor_id'] = isset($content->sponsor_id) ? $content->sponsor_id : null;
-
-    //     $context->request->setData($data);
-    // }
-
     protected function _mapColumns(KControllerContextInterface $context)
     {
         $request = $context->request;
