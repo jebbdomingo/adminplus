@@ -115,6 +115,11 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbs
             $entity->setProperties($data->toArray());
             $entity->save();
         }
+        else
+        {
+            $entity = $this->getObject($this->_model)->create($data->toArray());
+            $entity->save();
+        }
 
         return $entity;
     }

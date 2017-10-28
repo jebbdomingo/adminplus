@@ -56,9 +56,9 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             $this->account_id = $account->id;
 
             // $subject = "Your Nucleon Plus Account has been activated";
-            $subject = 'Your Nucleon + Account has been created';
+            $subject = 'Your Nucleon + Rewards Account has been created';
             $body    = JText::sprintf(
-                "Hello %s,\n\nContratulations! Your Nucleon + Account has been created. You can now login at %s with the following username and password.\n\nUsername: %s\npassword: %s\n\nHave a nice day!",
+                "Hello %s,\n\nContratulations! Your Nucleon + Rewards Account has been created. You can now login at %s with the following username and password.\n\nUsername: %s\npassword: %s\n\nHave a nice day!",
                 $member->name,
                 JUri::root(),
                 $member->username,
@@ -144,6 +144,8 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             'city'                => $this->city,
             'state'               => $this->state,
             'postal_code'         => $this->postal_code,
+            'app'                 => $this->app,
+            'app_entity'          => $this->app_entity,
         ));
         
         $account->save();
@@ -176,6 +178,8 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
         $account->city                = $this->city;
         $account->state               = $this->state;
         $account->postal_code         = $this->postal_code;
+        $account->app                 = $this->app;
+        $account->app_entity          = $this->app_entity;
 
         $account->save();
         return $account;

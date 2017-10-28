@@ -17,8 +17,7 @@ class ComRewardlabsModelMembers extends KModelDatabase
         $this->getState()
             ->insert('email'      , 'email' , null, true)
             ->insert('username'   , 'email' , null, true)
-            ->insert('app'        , 'cmd'   , null, true)
-            ->insert('app_entity' , 'cmd'   , null, true);
+        ;
     }
 
     protected function _buildQueryColumns(KDatabaseQueryInterface $query)

@@ -15,9 +15,11 @@ class ComRewardlabsModelAccounts extends KModelDatabase
         parent::__construct($config);
 
         $this->getState()
-            ->insert('status', 'string')
-            ->insert('sponsor_id', 'string')
-            ->insert('user_id', 'int')
+            ->insert('status'     , 'string')
+            ->insert('sponsor_id' , 'string')
+            ->insert('user_id'    , 'int')
+            ->insert('app'        , 'cmd'   , null, true)
+            ->insert('app_entity' , 'cmd'   , null, true)
         ;
     }
 
@@ -73,6 +75,14 @@ class ComRewardlabsModelAccounts extends KModelDatabase
 
         if ($state->user_id) {
             $query->where('tbl.user_id = :user_id')->bind(['user_id' => $state->user_id]);
+        }
+
+        if ($state->app) {
+            $query->where('app = :app')->bind(array('app' => $state->app));
+        }
+
+        if ($state->app_entity) {
+            $query->where('app_entity = :app_entity')->bind(array('app_entity' => $state->app_entity));
         }
     }
 

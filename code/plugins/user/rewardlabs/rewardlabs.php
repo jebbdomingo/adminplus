@@ -93,7 +93,7 @@ class PlgUserRewardlabs extends JPlugin
     protected function sendSuccessActivationEmail($name, $email)
     {
         // Attempt to send success email
-        $subject = "Your Nucleon Plus Account has been activated";
+        $subject = "Your Nucleon + Rewards Account has been activated";
         $body    = JText::sprintf(
             'PLG_REWARDLABS_EMAIL_ACTIVATION_BODY',
             $name,

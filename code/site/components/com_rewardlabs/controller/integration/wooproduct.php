@@ -76,6 +76,12 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
             $entity = $this->getObject($this->_model)->app($app)->app_entity($content->id)->fetch();
             $request->query->set($this->_identifier_column, $entity->id);
         }
+        elseif ('add' == $action)
+        {
+            if ('publish' != $content->status) {
+                throw new Exception('Product creation aborted - product is not yet published');
+            }
+        }
 
         foreach ($this->_columns as $column) {
             $data[$column] = isset($content->$column) ? $content->$column : null;
@@ -87,13 +93,12 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
         $data['Name']        = $content->name;
         $data['Description'] = $content->description;
         $data['Type']        = $content->virtual ? 'Service' : 'Inventory';
-        $data['UnitPrice']   = $content->price;
         $data['QtyOnHand']   = $content->stock_quantity;
-        $data['Active']      = 1;
+        $data['status']      = 'publish' == $content->status ?  'active' : 'inactive';
 
         if (isset($content->meta_data))
         {
-            $params = array('charges','rebates','profit','drpv','irpv','stockist');
+            $params = array('charges','rebates','profit','drpv','irpv','stockist','PurchaseCost');
 
             foreach ($content->meta_data as $datum)
             {
@@ -104,6 +109,5 @@ class ComRewardlabsControllerIntegrationWooproduct extends ComRewardlabsControll
         }
 
         $context->request->setData($data);
-
     }
 }
