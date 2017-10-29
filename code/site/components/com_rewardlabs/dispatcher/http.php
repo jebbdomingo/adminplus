@@ -127,7 +127,7 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
         {
             try
             {
-                $controller = $this->getObject("com://site/rewardlabs.controller.integration.{$controller}");
+                $controller = $this->getObject("com://site/rewardlabs.controller.{$controller}");
                 $controller->setRequest($request);
                 $controller->$action($request->data->toArray());
                 $result = 'result=OK';

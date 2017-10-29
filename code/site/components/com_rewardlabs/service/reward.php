@@ -19,11 +19,11 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
     protected $_unilevel_count;
 
     /**
-     * Referral bonus controller.
+     * Referral bonus model
      *
-     * @param KObjectIdentifierInterface
+     * @param KModelInterface
      */
-    protected $_controller;
+    protected $_model;
 
     /**
      * Accounting journal Service
@@ -42,8 +42,8 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
         parent::__construct($config);
 
         $this->_unilevel_count = $config->unilevel_count;
-        $this->_controller     = $this->getObject($config->controller);
-        $this->_journal        = $this->getObject('com://site/rewardlabs.accounting.journal');
+        $this->_model          = $this->getObject($config->model);
+        // $this->_journal        = $this->getObject('com://site/rewardlabs.accounting.journal');
     }
 
     /**
@@ -57,7 +57,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
     {
         $config->append(array(
             'unilevel_count' => 20,
-            'controller'     => 'com://site/rewardlabs.controller.rewards',
+            'model'          => 'com://site/rewardlabs.model.rewards',
         ));
 
         parent::_initialize($config);
@@ -90,15 +90,16 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
             $points   = $item['drpv'] * $quantity;
 
             // Record direct referral reward
-            $this->_controller->add(array(
+            $reward = $this->_model->create(array(
                 'item'    => $item['id'],
                 'account' => $data['referrer'],
                 'type'    => 'direct_referral', // Direct Referral
                 'points'  => $points,
             ));
+            $reward->save();
 
             // Post direct referral reward to accounting system
-            $this->_journal->recordDirectReferralExpense($item['id'], $points);
+            // $this->_journal->recordDirectReferralExpense($item['id'], $points);
 
             // Try to get the 1st indirect referrer
             $referrer  = $this->getObject('com://site/rewardlabs.model.accounts')
@@ -140,12 +141,13 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
                 ->fetch()
             ;
 
-            $this->_controller->add(array(
+            $reward = $this->_model->create(array(
                 'item'    => $item['id'],
                 'account' => $indirect_referrer->id,
                 'type'    => 'indirect_referral', // Indirect Referral
                 'points'  => $points
             ));
+            $reward->save();
 
             @$ir_bonus_alloc[$item['id']] += $points;
 
@@ -166,7 +168,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
         }
 
         if (isset($ir_bonus_alloc[$item['id']])) {
-            $this->_journal->recordIndirectReferralExpense($item['id'], $ir_bonus_alloc[$item['id']]);
+            // $this->_journal->recordIndirectReferralExpense($item['id'], $ir_bonus_alloc[$item['id']]);
         }
     }
 }

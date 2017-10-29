@@ -8,27 +8,8 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControllerIntegrationAbstract
+class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrationabstract
 {
-    /**
-     * Columns
-     *
-     * @var array
-     */
-    protected $_columns;
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config Configuration options.
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_columns = KObjectConfig::unbox($config->columns);
-    }
-
     /**
      * Initializes the default configuration for the object
      *
@@ -43,10 +24,9 @@ class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControl
             'identifier_column' => 'id',
             'model'             => 'com://site/rewardlabs.model.members',
             'columns'           => array(
-                'sponsor_id',
-                'name',
-                'username',
-                'email'
+                'id'       => 'app_entity',
+                'username' => 'username',
+                'email'    => 'email'
             ),
             // 'behaviors' => array(
             //     'customersyncable' => array(
@@ -60,13 +40,6 @@ class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControl
         ));
 
         parent::_initialize($config);
-
-        // Alter the permission of reward labs product controller
-        $config->append(array(
-            'behaviors' => array(
-                'permissible' => 'com://site/rewardlabs.controller.permission.woocustomer'
-            )
-        ));
     }
 
     protected function _validate(KControllerContextInterface $context)
@@ -74,17 +47,31 @@ class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControl
         parent::_validate($context);
 
         $request   = $context->request;
-        $data      = $request->data;
-        $sponsorId = trim($data->sponsor_id);
+        $content   = $request->data ? $request->data : json_decode($request->getContent());
 
-        if (!empty($sponsorId))
+        if (isset($content->meta_data))
         {
-            $account = $this->getObject('com://site/rewardlabs.model.accounts')
-                ->id($sponsorId)
-                ->fetch();
+            $params = array(
+                'sponsor_id' => 'sponsor_id',
+            );
 
-            if (count($account) == 0) {
-                throw new KControllerExceptionActionFailed('INVALID_SPONSOR_ID');
+            foreach ($content->meta_data as $datum)
+            {
+                if (array_key_exists($datum['key'], $params))
+                {
+                    $sponsor_id = trim($datum['value']);
+
+                    if (!empty($sponsor_id))
+                    {
+                        $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                            ->id($sponsor_id)
+                            ->fetch();
+
+                        if (count($account) == 0) {
+                            throw new KControllerExceptionActionFailed('INVALID_SPONSOR_ID');
+                        }
+                    }
+                }
             }
         }
 
@@ -99,26 +86,47 @@ class ComRewardlabsControllerIntegrationWoocustomer extends ComRewardlabsControl
         $content = $request->data ? $request->data : json_decode($request->getContent());
         $data    = array();
 
-        foreach ($this->_columns as $column) {
-            $data[$column] = isset($content->$column) ? $content->$column : null;
-
+        // Direct column mapping
+        foreach ($this->_columns as $field => $column) {
+            $data[$column] = isset($content->$field) ? $content->$field : null;
         }
-        // Fetch the identifier of the local copy of the entity
+
+        // Dynamic column mapping
         if ('edit' == $action)
         {
+            // Fetch the identifier of the local copy of the entity
             $data['name'] = "{$content->first_name} {$content->last_name}";
 
-            $entity = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
-            $request->query->set($this->_identifier_column, $entity->user_id);
+            $account = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
+            $request->query->set($this->_identifier_column, $account->user_id);
         }
         elseif ('add' == $action)
         {
+            // Dynamic column mapping
             $data['name'] = !empty($content->first_name) ? "{$content->first_name} {$content->last_name}" : $content->username;
         }
 
-        $data['app']        = $app;
-        $data['app_entity'] = $content->id;
-        $data['sponsor_id'] = isset($content->sponsor_id) ? $content->sponsor_id : null;
+        $data['app'] = $app;
+
+        // Meta data column mapping
+        if (isset($content->meta_data))
+        {
+            $params = array(
+                'sponsor_id' => 'sponsor_id',
+            );
+
+            foreach ($content->meta_data as $datum)
+            {
+                // Map columns
+                $column = $params[$datum['key']];
+                
+                if (!array_key_exists($datum['key'], $params)) {
+                    continue;
+                }
+
+                $data[$column] = $datum['value'];
+            }
+        }
 
         $context->request->setData($data);
     }

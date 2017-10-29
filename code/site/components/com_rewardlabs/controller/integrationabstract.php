@@ -8,7 +8,7 @@
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
 
-abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbstract
+abstract class ComRewardlabsControllerIntegrationabstract extends KControllerAbstract
 {
     /**
      * Model
@@ -25,6 +25,13 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbs
     protected $_identifier_column;
 
     /**
+     * Column mapping
+     *
+     * @var array
+     */
+    protected $_columns;
+
+    /**
      * Constructor.
      *
      * @param KObjectConfig $config Configuration options.
@@ -35,13 +42,16 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbs
 
         $this->addCommandCallback('before.add', '_debug');
         $this->addCommandCallback('before.add', '_validate');
+        $this->addCommandCallback('before.add', '_mapColumns');
         $this->addCommandCallback('before.edit', '_debug');
         $this->addCommandCallback('before.edit', '_validate');
+        $this->addCommandCallback('before.edit', '_mapColumns');
         $this->addCommandCallback('before.delete', '_debug');
         $this->addCommandCallback('before.delete', '_validate');
 
         $this->_identifier_column = $config->identifier_column;
         $this->_model             = $config->model;
+        $this->_columns           = KObjectConfig::unbox($config->columns);
     }
 
     /**
@@ -91,8 +101,6 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbs
 
     protected function _actionAdd(KControllerContextInterface $context)
     {
-        $this->_mapColumns($context);
-
         $data = $context->request->data;
 
         $entity = $this->getObject($this->_model)->create($data->toArray());
@@ -103,8 +111,6 @@ abstract class ComRewardlabsControllerIntegrationAbstract extends KControllerAbs
 
     protected function _actionEdit(KControllerContextInterface $context)
     {
-        $this->_mapColumns($context);
-
         $id   = $context->request->query->get($this->_identifier_column, 'cmd', false);
         $data = $context->request->data;
 
