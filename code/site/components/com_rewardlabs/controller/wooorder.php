@@ -29,21 +29,20 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
         parent::_initialize($config);
     }
 
-    protected function _actionRewards(KControllerContextInterface $context)
+    protected function _validate(KControllerContextInterface $context)
     {
-        $request    = $context->request;
-        $app        = $request->query->get('app', 'cmd');
-        $action     = $request->query->get('action', 'cmd');
-        $content    = $request->data ? $request->data : json_decode($request->getContent());
-        $sponsor_id = null;
-        $items      = array();
+        $request = $context->request;
+        $app     = $request->query->get('app', 'cmd');
+        $action  = $request->query->get('action', 'cmd');
+        $content = $request->data ? $request->data : json_decode($request->getContent());
+        $items   = array();
 
-        // Dynamic column mapping
+        // Validate status
         if ('completed' != $content->status) {
             throw new Exception('Rewards creation aborted - order is not yet completed');
         }
 
-        // Fetch sponsor id
+        // Validate sponsor id
         foreach ($content->meta_data as $datum)
         {
             if ('sponsor_id' == $datum['key'])
@@ -57,9 +56,48 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
                         ->fetch();
 
                     if (count($account) == 0) {
-                        throw new KControllerExceptionActionFailed('INVALID_SPONSOR_ID');
+                        throw new KControllerExceptionActionFailed('Invalid sponsor id');
                     }
                 }
+
+                break;
+            }
+        }
+        
+        // Fetch rewards metadata
+        $params  = array(
+            'drpv' => 'drpv',
+            'irpv' => 'irpv',
+        );
+
+        // Ensure order line items are encoded only once to prevent multiple payments of rewards for single order
+        foreach ($content->line_items as $item)
+        {
+            $id      = $item['id'];
+            $rewards = $this->getObject('com://site/rewardlabs.model.rewards')->item($id)->count();
+
+            if ($rewards) {
+                throw new KControllerExceptionActionFailed("Order line item {$id} was already encoded");
+            }
+        }
+
+        return true;
+    }
+
+    protected function _actionAdd(KControllerContextInterface $context)
+    {
+        $request    = $context->request;
+        $app        = $request->query->get('app', 'cmd');
+        $action     = $request->query->get('action', 'cmd');
+        $content    = $request->data ? $request->data : json_decode($request->getContent());
+        $sponsor_id = null;
+        $items      = array();
+
+        // Fetch sponsor id
+        foreach ($content->meta_data as $datum)
+        {
+            if ('sponsor_id' == $datum['key']) {
+                $sponsor_id = trim($datum['value']);
             }
         }
         

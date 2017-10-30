@@ -36,6 +36,22 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
         parent::_initialize($config);
     }
 
+    protected function _validate(KControllerContextInterface $context)
+    {
+        parent::_validate($context);
+
+        $request = $context->request;
+        $action  = $request->query->get('action', 'cmd');
+        $content = $request->data ? $request->data : json_decode($request->getContent());
+
+        // Ensure woocommerce product is already published when creating a reward labs product
+        if ('add' == $action && 'publish' != $content->status) {
+            throw new Exception('Product creation aborted - product is not yet published');
+        }
+
+        return true;
+    }
+
     protected function _mapColumns(KControllerContextInterface $context)
     {
         $request = $context->request;
@@ -58,10 +74,6 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
 
             // Quantity update is handled in the inventory system for tracking cost
             unset($data['QtyOnHand']);
-        }
-        elseif ('add' == $action && 'publish' != $content->status)
-        {
-            throw new Exception('Product creation aborted - product is not yet published');
         }
 
         $data['app']    = $app;

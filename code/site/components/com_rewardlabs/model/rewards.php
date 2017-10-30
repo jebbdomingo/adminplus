@@ -16,8 +16,8 @@ class ComRewardlabsModelRewards extends KModelDatabase
 
         $this->getState()
             ->insert('type', 'string')
-            ->insert('account', 'int')
-            ->insert('payout_id', 'int')
+            ->insert('account', 'string')
+            ->insert('item', 'int')
         ;
     }
 
@@ -39,15 +39,15 @@ class ComRewardlabsModelRewards extends KModelDatabase
         $state = $this->getState();
 
         if ($state->type) {
-            $query->where('tbl.type = :type')->bind(['type' => $state->type]);
+            $query->where('tbl.type IN :type')->bind(array('type' => (array) $state->type));
         }
 
         if ($state->account) {
-            $query->where('tbl.account = :account')->bind(['account' => $state->account]);
+            $query->where('tbl.account IN :account')->bind(array('account' => (array) $state->account));
         }
 
-        if ($state->payout_id === 0 || $state->payout_id > 0) {
-            $query->where('tbl.payout_id = :payout_id')->bind(['payout_id' => $state->payout_id]);
+        if ($state->item) {
+            $query->where('tbl.item IN :item')->bind(array('item' => (array) $state->item));
         }
     }
 
