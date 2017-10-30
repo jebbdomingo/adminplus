@@ -128,6 +128,8 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
         $model = $this->getObject('com://site/rewardlabs.model.accounts');
 
         $account = $model->create(array(
+            'id'                  => $this->account_number,
+            'status'              => $this->status,
             'user_id'             => $userId,
             'user_name'           => $this->name,
             'sponsor_id'          => $this->sponsor_id,

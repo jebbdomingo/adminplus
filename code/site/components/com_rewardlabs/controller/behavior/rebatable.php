@@ -12,11 +12,11 @@
 class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstract
 {
     /**
-     * Referral bonus controller.
+     * Rewards model
      *
-     * @param KObjectIdentifierInterface
+     * @param KModelInterface
      */
-    protected $_controller;
+    protected $_model;
 
     /**
      * Constructor.
@@ -27,7 +27,7 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
     {
         parent::__construct($config);
 
-        $this->_controller = $this->getObject($config->controller);
+        $this->_model = $this->getObject($config->model);
     }
 
     /**
@@ -40,8 +40,8 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
-            'controller' => 'com://site/rewardlabs.controller.rewards',
+            'priority' => static::PRIORITY_LOW, // low priority so that rewardable runs first
+            'model'    => 'com://site/rewardlabs.model.rewards',
         ));
 
         parent::_initialize($config);
@@ -66,7 +66,7 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
      */
     public function encode($order)
     {
-        $accounting = $this->getObject('com://site/rewardlabs.accounting.journal');
+        // $accounting = $this->getObject('com://site/rewardlabs.accounting.journal');
 
         $items = $order->getOrderItems();
 
@@ -79,10 +79,11 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
                 'type'    => 'rebates',
                 'points'  => $item->rebates * $item->quantity,
             );
-            $this->_controller->add($data);
+            $reward = $this->_model->create($data);
+            $reward->save();
 
             // Post rebates allocation to accounting system
-            $accounting->recordRebatesExpense($item->id, $item->rebates * $item->quantity);
+            // $accounting->recordRebatesExpense($item->id, $item->rebates * $item->quantity);
         }
     }
 }

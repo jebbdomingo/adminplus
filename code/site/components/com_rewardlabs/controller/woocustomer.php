@@ -26,7 +26,7 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             'columns'           => array(
                 'id'       => 'app_entity',
                 'username' => 'username',
-                'email'    => 'email'
+                'email'    => 'email',
             ),
             // 'behaviors' => array(
             //     'customersyncable' => array(
@@ -57,7 +57,7 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             $account = $this->getObject('com:koowa.model.users')->email($email)->count();
 
             if ($account) {
-                throw new KControllerExceptionActionFailed("User creation aborted - emil {$email} already exists");
+                throw new KControllerExceptionActionFailed("User creation aborted - email {$email} already exists");
             }
         }
 
@@ -117,13 +117,15 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             $data['name'] = !empty($content->first_name) ? "{$content->first_name} {$content->last_name}" : $content->username;
         }
 
-        $data['app'] = $app;
+        $data['app']    = $app;
+        $data['status'] = 'active';
 
         // Meta data column mapping
         if (isset($content->meta_data))
         {
             $params = array(
-                'sponsor_id' => 'sponsor_id',
+                'account_number' => 'account_number',
+                'sponsor_id'     => 'sponsor_id',
             );
 
             foreach ($content->meta_data as $datum)

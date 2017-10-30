@@ -40,8 +40,8 @@ class ComRewardlabsControllerBehaviorReferrerrewardable extends KControllerBehav
         // {
         // }
 
-        $entity      = $context->result;
-        $order_items = $entity->getOrderItems();
+        $order       = $context->result;
+        $order_items = $order->getOrderItems();
         $items       = array();
 
         foreach ($order_items as $item)
@@ -54,10 +54,10 @@ class ComRewardlabsControllerBehaviorReferrerrewardable extends KControllerBehav
             );
         }
 
-        if ($entity->_account_sponsor_id)
+        if ($order->_account_sponsor_id)
         {
             $data = array(
-                'referrer' => $entity->_account_sponsor_id,
+                'referrer' => $order->_account_sponsor_id,
                 'items'    => $items,
             );
 
