@@ -45,8 +45,8 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
         $content = $request->data ? $request->data : json_decode($request->getContent());
 
         // Ensure woocommerce product is already published when creating a reward labs product
-        if ('add' == $action && 'publish' != $content->status) {
-            throw new Exception('Product creation aborted - product is not yet published');
+        if ('publish' != $content->status) {
+            throw new Exception('Sync aborted - product is not yet published');
         }
 
         return true;
@@ -70,10 +70,14 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
         {
             // Fetch the identifier of the local copy of the entity
             $entity = $this->getObject($this->_model)->app($app)->app_entity($content->id)->fetch();
-            $request->query->set($this->_identifier_column, $entity->id);
 
-            // Quantity update is handled in the inventory system for tracking cost
-            unset($data['QtyOnHand']);
+            if (count($entity))
+            {
+                $request->query->set($this->_identifier_column, $entity->id);
+                
+                // Quantity update is handled in the inventory system for tracking cost
+                unset($data['QtyOnHand']);
+            }
         }
 
         $data['app']    = $app;
@@ -102,7 +106,7 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
                     continue;
                 }
 
-                if ('edit' == $action && 'PurchaseCost' == $column) {
+                if ('edit' == $action && 'PurchaseCost' == $column && count($entity)) {
                     continue;
                 }
 

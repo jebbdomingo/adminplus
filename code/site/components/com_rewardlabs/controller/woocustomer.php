@@ -28,15 +28,15 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
                 'username' => 'username',
                 'email'    => 'email',
             ),
-            // 'behaviors' => array(
-            //     'customersyncable' => array(
-            //         'actions' => array(
-            //             'after.addcustomer'    => 'add',
-            //             'after.editcustomer'   => 'update',
-            //             'after.deletecustomer' => 'update',
-            //         )
-            //     ),
-            // ),
+            'behaviors' => array(
+                'customersyncable' => array(
+                    'actions' => array(
+                        'after.addcustomer'    => 'add',
+                        'after.editcustomer'   => 'update',
+                        'after.deletecustomer' => 'update',
+                    )
+                ),
+            ),
         ));
 
         parent::_initialize($config);

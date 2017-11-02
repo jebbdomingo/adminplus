@@ -66,7 +66,7 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
      */
     public function encode($order)
     {
-        // $accounting = $this->getObject('com://site/rewardlabs.accounting.journal');
+        $accounting = $this->getObject('com://site/rewardlabs.accounting.journal');
 
         $items = $order->getOrderItems();
 
@@ -83,7 +83,7 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
             $reward->save();
 
             // Post rebates allocation to accounting system
-            // $accounting->recordRebatesExpense($item->id, $item->rebates * $item->quantity);
+            $accounting->recordRebatesExpense($item->id, $item->rebates * $item->quantity);
         }
     }
 }

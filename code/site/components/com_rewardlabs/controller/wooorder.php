@@ -25,8 +25,8 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             'model'             => 'com://site/rewardlabs.model.orders',
             'columns'           => array(),
             'behaviors'         => array(
-                // 'accountable',
-                // 'chargeable',
+                'accountable',
+                'chargeable',
                 'referrerrewardable',
                 'rebatable',
             )
@@ -162,66 +162,6 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
         }
         else throw new KControllerExceptionActionFailed($order->getStatusMessage());
 
-
         return $order;
     }
-
-    // protected function _actionAdd(KControllerContextInterface $context)
-    // {
-    //     $request    = $context->request;
-    //     $app        = $request->query->get('app', 'cmd');
-    //     $action     = $request->query->get('action', 'cmd');
-    //     $content    = $request->data ? $request->data : json_decode($request->getContent());
-    //     $sponsor_id = null;
-    //     $items      = array();
-
-    //     // Fetch sponsor id
-    //     foreach ($content->meta_data as $datum)
-    //     {
-    //         if ('sponsor_id' == $datum['key']) {
-    //             $sponsor_id = trim($datum['value']);
-    //         }
-    //     }
-        
-    //     // Fetch rewards metadata
-    //     $params  = array(
-    //         'drpv' => 'drpv',
-    //         'irpv' => 'irpv',
-    //     );
-
-    //     foreach ($content->line_items as $item)
-    //     {
-    //         if (isset($item['meta_data']))
-    //         {
-    //             $metadata = $item['meta_data'];
-    //             $rewards  = array();
-
-    //             $rewards['id']       = $item['id'];
-    //             $rewards['quantity'] = $item['quantity'];
-
-    //             foreach ($metadata as $datum)
-    //             {
-    //                 if (!array_key_exists($datum['key'], $params)) {
-    //                     continue;
-    //                 }
-
-    //                 // Map columns
-    //                 $column = $params[$datum['key']];
-    //                 $rewards[$column] = $datum['value'];
-    //             }
-
-    //             $items[] = $rewards;
-    //         }
-    //     }
-
-    //     if ($sponsor_id)
-    //     {
-    //         $data = array(
-    //             'referrer' => $sponsor_id,
-    //             'items'    => $items,
-    //         );
-
-    //         $this->getObject('com://site/rewardlabs.service.reward')->encode($data);
-    //     }
-    // }
 }
