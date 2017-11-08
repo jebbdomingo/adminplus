@@ -24,7 +24,7 @@ class ComRewardlabsModelEntityOrder extends KModelEntityRow
     const INVOICE_STATUS_PAID = 'paid';
 
     const SHIPPING_METHOD_NA   = 'na';
-    const SHIPPING_METHOD_XEND = 'xend';
+    const SHIPPING_METHOD_XEND = 'Xend';
 
     const PAYMENT_METHOD_CASH      = 'cash';
     const PAYMENT_METHOD_DRAGONPAY = 'dragonpay';

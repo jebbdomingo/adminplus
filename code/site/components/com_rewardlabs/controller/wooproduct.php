@@ -38,8 +38,6 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
 
     protected function _validate(KControllerContextInterface $context)
     {
-        parent::_validate($context);
-
         $request = $context->request;
         $action  = $request->query->get('action', 'cmd');
         $content = $request->data ? $request->data : json_decode($request->getContent());

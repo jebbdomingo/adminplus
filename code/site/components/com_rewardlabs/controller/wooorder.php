@@ -48,6 +48,13 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             throw new Exception('Rewards creation aborted - order is not yet completed');
         }
 
+        // Ensure the order is synced once
+        $order = $this->getObject('com://site/rewardlabs.model.orders')->app($app)->app_entity($content->id)->count();
+
+        if ($order) {
+            throw new KControllerExceptionActionFailed("Order {$content->id} already exists");
+        }
+
         // Validate sponsor id
         foreach ($content->meta_data as $datum)
         {
@@ -70,12 +77,6 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             }
         }
         
-        // Fetch rewards metadata
-        $params  = array(
-            'drpv' => 'drpv',
-            'irpv' => 'irpv',
-        );
-
         // Ensure order line items are encoded only once to prevent multiple payments of rewards for single order
         foreach ($content->line_items as $item)
         {
@@ -104,28 +105,21 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             'order_status'    => $content->status,
             'invoice_status'  => $content->status,
             'payment_method'  => $content->payment_method,
-            'shipping_method' => $content->shipping_lines[0]['method_title'],
+            'shipping_method' => count($content->shipping_lines) ? $content->shipping_lines[0]['method_title'] : 'na',
+            'shipping_cost'   => $content->shipping_total,
             'address'         => $content->shipping['address_1'],
             'city_id'         => $content->shipping['city'],
             'postal_code'     => $content->shipping['postcode']
         );
 
-        if (isset($content->meta_data))
-        {
-            $params = array(
-                'account_number' => 'account',
-            );
+        // Customer account
+        $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                    ->app($app)
+                    ->app_entity($content->customer_id)
+                    ->fetch();
 
-            foreach ($content->meta_data as $datum)
-            {
-                if (!array_key_exists($datum['key'], $params)) {
-                    continue;
-                }
-
-                // Map columns
-                $column = $params[$datum['key']];
-                $data[$column] = $datum['value'];
-            }
+        if (count($account)) {
+            $data['account'] = $account->id;
         }
 
         $order = $this->getObject($this->_model)->create($data);

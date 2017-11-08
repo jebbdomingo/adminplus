@@ -82,7 +82,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
             $user     = $this->getObject('user');
             $employee = $this->getObject('com://site/rewardlabs.model.employeeaccounts')->user_id($user->getId())->fetch();
             
-            $salesreceipt['DepartmentRef']       = $employee->DepartmentRef; // Store branch
+            $salesreceipt['DepartmentRef']       = $this->_department_ref; //$employee->DepartmentRef; // Store branch
             $salesreceipt['DepositToAccountRef'] = $this->_undeposited_account_ref; // Undeposited Funds Account
             $salesreceipt['transaction_type']    = 'offline'; // Order placed via onsite POS
         }
@@ -108,7 +108,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         }
 
         // Shipping charge line item
-        if ($order->shipping_method == 'xend' && $order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
+        if ($order->shipping_method == ComRewardlabsModelEntityOrder::SHIPPING_METHOD_XEND && $order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
         {
             // Delivery charge
             if ($shippingCost = $order->shipping_cost)

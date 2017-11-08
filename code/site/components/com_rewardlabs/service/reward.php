@@ -43,7 +43,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
 
         $this->_unilevel_count = $config->unilevel_count;
         $this->_model          = $this->getObject($config->model);
-        // $this->_journal        = $this->getObject('com://site/rewardlabs.accounting.journal');
+        $this->_journal        = $this->getObject('com://site/rewardlabs.accounting.journal');
     }
 
     /**
@@ -99,7 +99,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
             $reward->save();
 
             // Post direct referral reward to accounting system
-            // $this->_journal->recordDirectReferralExpense($item['id'], $points);
+            $this->_journal->recordDirectReferralExpense($item['id'], $points);
 
             // Try to get the 1st indirect referrer
             $referrer  = $this->getObject('com://site/rewardlabs.model.accounts')
@@ -168,7 +168,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
         }
 
         if (isset($ir_bonus_alloc[$item['id']])) {
-            // $this->_journal->recordIndirectReferralExpense($item['id'], $ir_bonus_alloc[$item['id']]);
+            $this->_journal->recordIndirectReferralExpense($item['id'], $ir_bonus_alloc[$item['id']]);
         }
     }
 }

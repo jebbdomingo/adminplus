@@ -70,13 +70,6 @@ abstract class ComRewardlabsControllerIntegrationabstract extends KControllerAbs
         ));
 
         parent::_initialize($config);
-
-        // Alter the permission of reward labs product controller
-        $config->append(array(
-            'behaviors' => array(
-                'permissible' => null
-            )
-        ));
     }
 
     protected function _validate(KControllerContextInterface $context)

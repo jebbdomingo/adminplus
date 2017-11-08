@@ -61,31 +61,6 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             }
         }
 
-        // Validate sponsor id
-        if (isset($content->meta_data))
-        {
-            foreach ($content->meta_data as $datum)
-            {
-                if ('sponsor_id' == $datum['key'])
-                {
-                    $sponsor_id = trim($datum['value']);
-
-                    if (!empty($sponsor_id))
-                    {
-                        $account = $this->getObject('com://site/rewardlabs.model.accounts')
-                            ->id($sponsor_id)
-                            ->fetch();
-
-                        if (count($account) == 0) {
-                            throw new KControllerExceptionActionFailed('Invalid sponsor id');
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
-
         return true;
     }
 
@@ -132,6 +107,22 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             {
                 if (!array_key_exists($datum['key'], $params)) {
                     continue;
+                }
+
+                // Validate sponsor id
+                if ('sponsor_id' == $datum['key'] && !empty(trim($datum['value'])))
+                {
+                    $sponsor_id = trim($datum['value']);
+
+                    $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                        ->id($sponsor_id)
+                        ->fetch();
+
+                    if (count($account) == 0)
+                    {
+                        echo 'Invalid sponsor id';
+                        continue;
+                    }
                 }
 
                 // Map columns
