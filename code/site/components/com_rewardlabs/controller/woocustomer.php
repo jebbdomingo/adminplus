@@ -61,6 +61,10 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             }
         }
 
+        if ('customer' != $content->role) {
+            throw new KControllerExceptionActionFailed("Role {$content->role} is not permitted");
+        }
+
         return true;
     }
 
