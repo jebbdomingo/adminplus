@@ -69,7 +69,12 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
             'CustomerMemo' => 'Thank you for your business and have a great day!',
         );
 
-        if ($order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
+        $is_online_payment = in_array($order->payment_method, array(
+            ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY,
+            ComRewardlabsModelEntityOrder::PAYMENT_METHOD_COD,
+        ));
+
+        if ($is_online_payment)
         {
             // Online payment
             $salesreceipt['DepartmentRef']       = $this->_department_ref; // Angono EC Valle store
@@ -78,7 +83,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         }
         else
         {
-            // Cash
+            // Cash (in-store) purchase
             $user     = $this->getObject('user');
             $employee = $this->getObject('com://site/rewardlabs.model.employeeaccounts')->user_id($user->getId())->fetch();
             
