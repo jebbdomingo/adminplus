@@ -22,6 +22,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
 
         $this->_department_ref          = $config->department_ref;
         $this->_online_payments_account = $config->online_payments_account;
+        $this->_cod_payments_account    = $config->cod_payments_account;
         $this->_bank_account_ref        = $config->bank_account_ref;
         $this->_undeposited_account_ref = $config->undeposited_account_ref;
         $this->_shipping_account        = $config->shipping_account;
@@ -40,11 +41,12 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         $config->append(array(
-            'department_ref'               => $data->store_angono,
-            'online_payments_account'      => $data->ACCOUNT_ONLINE_PAYMENTS, // Online payment processor account
-            'bank_account_ref'             => $data->account_bank_ref, // Bank Account
-            'undeposited_account_ref'      => $data->account_undeposited_ref, // Undeposited Funds Account
-            'shipping_account'             => $data->ACCOUNT_INCOME_SHIPPING
+            'department_ref'          => $data->store_angono,
+            'online_payments_account' => $data->ACCOUNT_ONLINE_PAYMENTS, // Online payment processor account
+            'cod_payments_account'    => $data->ACCOUNT_COD_PAYMENTS, // COD payment processor account
+            'bank_account_ref'        => $data->account_bank_ref, // Bank Account
+            'undeposited_account_ref' => $data->account_undeposited_ref, // Undeposited Funds Account
+            'shipping_account'        => $data->ACCOUNT_INCOME_SHIPPING
         ));
 
         parent::_initialize($config);
@@ -69,12 +71,14 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
             'CustomerMemo' => 'Thank you for your business and have a great day!',
         );
 
-        $is_online_payment = in_array($order->payment_method, array(
-            ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY,
-            ComRewardlabsModelEntityOrder::PAYMENT_METHOD_COD,
-        ));
-
-        if ($is_online_payment)
+        if ($order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_COD)
+        {
+            // COD payment
+            $salesreceipt['DepartmentRef']       = $this->_department_ref; // Angono EC Valle store
+            $salesreceipt['DepositToAccountRef'] = $this->_cod_payments_account; // COD payment processor account
+            $salesreceipt['transaction_type']    = 'online'; // Customer ordered thru website
+        }
+        elseif ($order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
         {
             // Online payment
             $salesreceipt['DepartmentRef']       = $this->_department_ref; // Angono EC Valle store
