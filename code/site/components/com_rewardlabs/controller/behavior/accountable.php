@@ -88,8 +88,8 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         else
         {
             // Cash (in-store) purchase
-            $user     = $this->getObject('user');
-            $employee = $this->getObject('com://site/rewardlabs.model.employeeaccounts')->user_id($user->getId())->fetch();
+            // $user     = $this->getObject('user');
+            // $employee = $this->getObject('com://site/rewardlabs.model.employeeaccounts')->user_id($user->getId())->fetch();
             
             $salesreceipt['DepartmentRef']       = $this->_department_ref; //$employee->DepartmentRef; // Store branch
             $salesreceipt['DepositToAccountRef'] = $this->_undeposited_account_ref; // Undeposited Funds Account
