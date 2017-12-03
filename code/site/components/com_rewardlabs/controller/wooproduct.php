@@ -42,7 +42,7 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
         $action  = $request->query->get('action', 'cmd');
         $content = $request->data ? $request->data : json_decode($request->getContent());
 
-        // Ensure woocommerce product is already published when creating a reward labs product
+        // Ensure woocommerce product is published when creating a reward labs product
         if ('publish' != $content->status) {
             throw new Exception('Sync aborted - product is not yet published');
         }
