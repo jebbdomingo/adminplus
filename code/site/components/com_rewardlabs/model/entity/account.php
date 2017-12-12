@@ -81,23 +81,10 @@ class ComRewardlabsModelEntityAccount extends KModelEntityRow
                 $this->setStatus(KDatabase::STATUS_FAILED);
                 return false;
             }
-            // else return $this->_generateAccountNumber();
         }
 
         return parent::save();
     }
-
-    // /**
-    //  * Generate account number
-    //  *
-    //  * @return KModelEntityRow
-    //  */
-    // private function _generateAccountNumber()
-    // {
-    //     $this->id = date('ymd') . "-{$this->user_id}";
-
-    //     return parent::save();
-    // }
 
     /**
      * Get the Account ID from the Account Number

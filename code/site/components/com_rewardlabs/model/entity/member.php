@@ -134,7 +134,6 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             'user_name'           => $this->name,
             'sponsor_id'          => $this->sponsor_id,
             'PrintOnCheckName'    => $this->PrintOnCheckName,
-            'status'              => 'pending',
             'bank_name'           => $this->bank_name,
             'bank_account_number' => $this->bank_account_number,
             'bank_account_name'   => $this->bank_account_name,
