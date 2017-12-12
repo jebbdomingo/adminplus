@@ -80,10 +80,7 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
      */
     public function encode($data)
     {
-        // if ($order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
-        // {
-        // }
-        
+
         foreach ($data['items'] as $item)
         {
             $quantity = $item['quantity'];

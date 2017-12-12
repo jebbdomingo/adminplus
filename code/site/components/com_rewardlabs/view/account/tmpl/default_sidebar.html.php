@@ -17,11 +17,6 @@
                     Referrals
                 </a>
             </li>
-            <li class="<?= parameters()->view === 'orders' ? 'k-is-active' : null ?>">
-                <a href="<?= route('view=orders&search=' . $account->id) ?>">
-                    Orders
-                </a>
-            </li>
             <li class="<?= parameters()->view === 'payouts' ? 'k-is-active' : null ?>">
                 <a href="<?= route('view=payouts') ?>">
                     Payouts
