@@ -28,7 +28,7 @@ class ComRewardlabsModelEntityOrder extends KModelEntityRow
 
     const PAYMENT_METHOD_CASH      = 'cash';
     const PAYMENT_METHOD_DRAGONPAY = 'dragonpay';
-    const PAYMENT_METHOD_COD       = 'cod';
+    const PAYMENT_METHOD_COD       = 'dragonpay_cod';
     
     /**
      * Prevent deletion of order

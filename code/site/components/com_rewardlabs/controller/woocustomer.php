@@ -84,6 +84,8 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
         // Dynamic column mapping
         if ('edit' == $action)
         {
+            $data['name'] = "{$content->first_name} {$content->last_name}";
+            
             // Fetch the identifier of the local copy of the entity
             $account = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
             $request->query->set($this->_identifier_column, $account->user_id);
