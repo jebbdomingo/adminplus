@@ -43,7 +43,7 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             $system = $params->get('new_usertype', 2);
             $data['groups'][] = $system;
 
-            if(!$user->bind($data)) {
+            if (!$user->bind($data)) {
                 throw new KControllerExceptionActionFailed("Could not bind data. Error: " . $user->getError());
             }
 
@@ -78,7 +78,7 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
             $member->remove('password');
             $data = $member->toArray();
 
-            if(!$user->bind($data)) {
+            if (!$user->bind($data)) {
                 throw new KControllerExceptionActionFailed("Could not bind data. Error: " . $user->getError());
             }
 

@@ -85,8 +85,6 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
         if ('edit' == $action)
         {
             // Fetch the identifier of the local copy of the entity
-            $data['name'] = "{$content->first_name} {$content->last_name}";
-
             $account = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
             $request->query->set($this->_identifier_column, $account->user_id);
         }
