@@ -37,7 +37,7 @@ class ComRewardlabsAccountingJournal extends KObject implements ComRewardlabsAcc
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'journal_service' => 'com://admin/qbsync.service.journal',
+            'journal_service' => 'com://admin/qbsync.service.journalentry',
         ));
 
         parent::_initialize($config);
@@ -52,7 +52,7 @@ class ComRewardlabsAccountingJournal extends KObject implements ComRewardlabsAcc
      */
     public function recordRebatesExpense($entityId, $amount)
     {
-        $data = $this->getObject('com:rewardlabs.accounting.data');
+        $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         return $this->_service->create(array(
             'DocNumber'         => $entityId,
@@ -75,7 +75,7 @@ class ComRewardlabsAccountingJournal extends KObject implements ComRewardlabsAcc
      */
     public function recordDirectReferralExpense($entityId, $amount)
     {
-        $data = $this->getObject('com:rewardlabs.accounting.data');
+        $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         return $this->_service->create(array(
             'DocNumber'         => $entityId,
@@ -98,7 +98,7 @@ class ComRewardlabsAccountingJournal extends KObject implements ComRewardlabsAcc
      */
     public function recordIndirectReferralExpense($entityId, $amount)
     {
-        $data = $this->getObject('com:rewardlabs.accounting.data');
+        $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         return $this->_service->create(array(
             'DocNumber'         => $entityId,
@@ -121,7 +121,7 @@ class ComRewardlabsAccountingJournal extends KObject implements ComRewardlabsAcc
      */
     public function recordChargesExpense($entityId, $amount)
     {
-        $data = $this->getObject('com:rewardlabs.accounting.data');
+        $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         return $this->_service->create(array(
             'DocNumber'         => $entityId,

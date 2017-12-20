@@ -64,7 +64,6 @@ class ComRewardlabsControllerBehaviorCustomersyncable extends KControllerBehavio
             'PrimaryEmailAddr' => $entity->email,
             'Line1'            => $entity->_account_street,
             'City'             => $entity->city,
-            'State'            => $entity->province,
             'PostalCode'       => $entity->_account_postal_code,
             'Country'          => 'Philippines',
         );
@@ -76,7 +75,7 @@ class ComRewardlabsControllerBehaviorCustomersyncable extends KControllerBehavio
             $account->status      = ComRewardlabsModelEntityMember::STATUS_ACTIVE;
             $account->save();
         } catch(Exception $e) {
-            $this->getResponse()->addMessage($e->getMessage(), KControllerResponse::FLASH_WARNING);
+            throw new KControllerExceptionActionFailed($e->getMessage());
         }
     }
 
@@ -105,7 +104,6 @@ class ComRewardlabsControllerBehaviorCustomersyncable extends KControllerBehavio
                 'PrimaryEmailAddr' => $entity->email,
                 'Line1'            => $entity->_account_street,
                 'City'             => $entity->city,
-                'State'            => $entity->province,
                 'PostalCode'       => $entity->_account_postal_code,
                 'Country'          => 'Philippines',
                 'Active'           => $entity->_account_status == ComRewardlabsModelEntityMember::STATUS_DELETED ? false : true
@@ -114,10 +112,7 @@ class ComRewardlabsControllerBehaviorCustomersyncable extends KControllerBehavio
             try {
                 $service->update($customer);
             } catch(Exception $e) {
-                $this->getResponse()->addMessage(
-                    $e->getMessage(),
-                    KControllerResponse::FLASH_WARNING
-                );
+                throw new KControllerExceptionActionFailed($e->getMessage());
             }
         }
         else $this->_add($context);

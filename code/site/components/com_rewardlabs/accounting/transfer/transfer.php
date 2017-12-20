@@ -53,20 +53,9 @@ class ComRewardlabsAccountingTransfer extends KObject implements ComRewardlabsAc
         $this->_service    = $this->getObject($config->transfer_service);
 
         // Accounts
-        $this->_online_payments_account           = $config->online_payments_account;
-        $this->_savings_account                   = $config->savings_account;
-        $this->_checking_account                  = $config->checking_account;
-        $this->_charges_account                   = $config->charges_account;
-        $this->_rebates_account                   = $config->rebates_account;
-        $this->_dr_bonus_account                  = $config->dr_bonus_account;
-        $this->_patronage_account                 = $config->patronage_account;
-        $this->_unilevel_dr_bonus_account         = $config->unilevel_dr_bonus_account;
-        $this->_unilevel_ir_bonus_account         = $config->unilevel_ir_bonus_account;
-        $this->_surplus_patronage_account         = $config->surplus_patronage_account;
-        $this->_surplus_unilevel_dr_bonus_account = $config->surplus_unilevel_dr_bonus_account;
-        $this->_surplus_unilevel_ir_bonus_account = $config->surplus_unilevel_ir_bonus_account;
-        $this->_delivery_expense_account          = $config->delivery_expense_account;
-        $this->_revenue_account                   = $config->revenue_account;
+        $this->_online_payments_account = $config->online_payments_account;
+        $this->_savings_account         = $config->savings_account;
+        $this->_checking_account        = $config->checking_account;
     }
 
     /**
@@ -80,25 +69,14 @@ class ComRewardlabsAccountingTransfer extends KObject implements ComRewardlabsAc
      */
     protected function _initialize(KObjectConfig $config)
     {
-        $data = $this->getObject('com:rewardlabs.accounting.data');
+        $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         $config->append(array(
-            'transfer_service'                  => 'com://admin/qbsync.service.transfer',
-            'transfer_controller'               => 'com://admin/qbsync.controller.transfer',
-            'online_payments_account'           => $data->ACCOUNT_ONLINE_PAYMENTS,
-            'savings_account'                   => $data->ACCOUNT_BANK_REF,
-            'checking_account'                  => $data->ACCOUNT_CHECKING_REF,
-            'charges_account'                   => $data->ACCOUNT_CHARGES,
-            'rebates_account'                   => $data->ACCOUNT_REBATES,
-            'dr_bonus_account'                  => $data->ACCOUNT_DIRECT_REFERRAL_BONUS,
-            'patronage_account'                 => $data->ACCOUNT_PATRONAGE,
-            'unilevel_dr_bonus_account'         => $data->ACCOUNT_REFERRAL_DIRECT,
-            'unilevel_ir_bonus_account'         => $data->ACCOUNT_REFERRAL_INDIRECT,
-            'surplus_patronage_account'         => $data->ACCOUNT_PATRONAGE_FLUSHOUT,
-            'surplus_unilevel_dr_bonus_account' => $data->ACCOUNT_REFERRAL_DIRECT_FLUSHOUT,
-            'surplus_unilevel_ir_bonus_account' => $data->ACCOUNT_REFERRAL_INDIRECT_FLUSHOUT,
-            'delivery_expense_account'          => $data->ACCOUNT_EXPENSE_DELIVERY,
-            'revenue_account'                   => $data->ACCOUNT_REVENUE,
+            'transfer_service'        => 'com://admin/qbsync.service.transfer',
+            'transfer_controller'     => 'com://admin/qbsync.controller.transfer',
+            'online_payments_account' => $data->ACCOUNT_ONLINE_PAYMENTS,
+            'savings_account'         => $data->ACCOUNT_BANK_REF,
+            'checking_account'        => $data->ACCOUNT_CHECKING_REF,
         ));
 
         parent::_initialize($config);

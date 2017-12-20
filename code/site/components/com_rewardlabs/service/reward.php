@@ -121,12 +121,10 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
      */
     private function _recordIndirectReferrals($account, array $item)
     {
-        $quantity = $item['quantity'];
-        $points   = ($item['irpv'] / $this->_unilevel_count) * $quantity;
-        $x        = 0;
-
-        $ir_bonus_alloc         = array();
-        $ir_surplus_bonus_alloc = array();
+        $quantity       = $item['quantity'];
+        $points         = ($item['irpv'] / $this->_unilevel_count) * $quantity;
+        $ir_bonus_alloc = array();
+        $x              = 0;
 
         // Try to get referrers up to the _unilevel_count level
         while ($x < $this->_unilevel_count)
@@ -154,7 +152,6 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
                 if ($x < $this->_unilevel_count)
                 {
                     $points = ($this->_unilevel_count - $x) * $points;
-                    @$ir_surplus_bonus_alloc[$item['id']] += $points;
                     break;
                 }
 

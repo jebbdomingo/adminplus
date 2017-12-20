@@ -1,8 +1,8 @@
 <?php
 /**
- * Nucleon Plus - Admin
+ * Reward Labs
  *
- * @package     Nucleon Plus
+ * @package     Reward Labs
  * @author      Jebb Domingo <https://github.com/jebbdomingo>
  * @copyright   Copyright (C) 2017 Nucleon Plus Co. (http://www.rewardlabs.com)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
@@ -23,7 +23,6 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         $this->_department_ref          = $config->department_ref;
         $this->_online_payments_account = $config->online_payments_account;
         $this->_cod_payments_account    = $config->cod_payments_account;
-        $this->_bank_account_ref        = $config->bank_account_ref;
         $this->_undeposited_account_ref = $config->undeposited_account_ref;
         $this->_shipping_account        = $config->shipping_account;
     }
@@ -44,8 +43,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
             'department_ref'          => $data->store_angono,
             'online_payments_account' => $data->ACCOUNT_ONLINE_PAYMENTS, // Online payment processor account
             'cod_payments_account'    => $data->ACCOUNT_COD_PAYMENTS, // COD payment processor account
-            'bank_account_ref'        => $data->account_bank_ref, // Bank Account
-            'undeposited_account_ref' => $data->account_undeposited_ref, // Undeposited Funds Account
+            'undeposited_account_ref' => $data->ACCOUNT_UNDEPOSITED_REF, // Undeposited Funds Account
             'shipping_account'        => $data->ACCOUNT_INCOME_SHIPPING
         ));
 
@@ -116,25 +114,24 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
             );
         }
 
+        $shipping_cost = $order->shipping_cost;
+
         // Shipping charge line item
-        if ($order->shipping_method == ComRewardlabsModelEntityOrder::SHIPPING_METHOD_XEND && $order->payment_method == ComRewardlabsModelEntityOrder::PAYMENT_METHOD_DRAGONPAY)
+        if ($order->shipping_method && $shipping_cost)
         {
             // Delivery charge
-            if ($shippingCost = $order->shipping_cost)
-            {
-                $lines[] = array(
-                    'Description' => 'Shipping',
-                    'Amount'      => $shippingCost,
-                    'Qty'         => $orderItem->quantity,
-                    'ItemRef'     => $this->_shipping_account,
-                );
-            }
+            $lines[] = array(
+                'Description' => 'Shipping',
+                'Amount'      => $shipping_cost,
+                'Qty'         => $orderItem->quantity,
+                'ItemRef'     => $this->_shipping_account,
+            );
         }
 
         $salesreceipt['lines'] = $lines;
 
-        $resp = $this->getObject('com://admin/qbsync.service.salesreceipt')->create($salesreceipt);
-        $order->SalesReceiptRef = $resp;
+        $id = $this->getObject('com://admin/qbsync.service.salesreceipt')->create($salesreceipt);
+        $order->SalesReceiptRef = $id;
         $order->save();
     }
 }

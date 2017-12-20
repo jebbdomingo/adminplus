@@ -31,6 +31,15 @@ class ComRewardlabsControllerWooproduct extends ComRewardlabsControllerIntegrati
                 'stock_quantity' => 'QtyOnHand',
                 'weight'         => 'weight',
             ),
+            'behaviors' => array(
+                'itemsyncable' => array(
+                    'actions' => array(
+                        'after.addproduct'    => 'add',
+                        'after.editproduct'   => 'update',
+                        'after.deleteproduct' => 'update',
+                    )
+                ),
+            ),
         ));
 
         parent::_initialize($config);
