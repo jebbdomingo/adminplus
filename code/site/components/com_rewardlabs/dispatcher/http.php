@@ -26,26 +26,6 @@ class ComRewardlabsDispatcherHttp extends ComKoowaDispatcherHttp
 
         $query->tmpl = 'koowa';
 
-        if ($query->view == 'cart' && $query->customer)
-        {
-            $model = $this->getObject('com://site/rewardlabs.model.carts');
-            $cart  = $model
-                ->customer($query->customer)
-                ->fetch()
-            ;
-
-            if (!count($cart))
-            {
-                $cart = $model->create(array('customer' => $query->customer));
-                $cart->save();
-
-                $id = $cart->id;
-            }
-            else $id = $cart->id;
-
-            $query->id = (int) $id;
-        }
-
         $view   = $query->get('view', 'cmd');
         $api    = $query->get('api', 'cmd');
         $switch = $query->get('switch', 'cmd');

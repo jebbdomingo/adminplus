@@ -56,12 +56,6 @@ class ComRewardlabsAccountingServiceSalesreceipt extends KObject implements ComR
      *
      * @var integer
      */
-    protected $_bank_account_ref;
-
-    /**
-     *
-     * @var integer
-     */
     protected $_undeposited_account_ref;
 
     /**
@@ -84,7 +78,6 @@ class ComRewardlabsAccountingServiceSalesreceipt extends KObject implements ComR
         $this->_item_controller         = $this->getObject($config->item_controller);
         $this->_department_ref          = $config->department_ref;
         $this->_online_payments_account = $config->online_payments_account;
-        $this->_bank_account_ref        = $config->bank_account_ref;
         $this->_undeposited_account_ref = $config->undeposited_account_ref;
         $this->_shipping_account        = $config->shipping_account;
 
@@ -120,7 +113,6 @@ class ComRewardlabsAccountingServiceSalesreceipt extends KObject implements ComR
             'transfer_service'             => 'com:rewardlabs.accounting.transfer',
             'department_ref'               => $data->store_angono,
             'online_payments_account'      => $data->ACCOUNT_ONLINE_PAYMENTS, // Online payment processor account
-            'bank_account_ref'             => $data->account_bank_ref, // Bank Account
             'undeposited_account_ref'      => $data->account_undeposited_ref, // Undeposited Funds Account
             'shipping_account'             => $data->ACCOUNT_INCOME_SHIPPING
         ));
