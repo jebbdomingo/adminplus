@@ -19,6 +19,7 @@ class ComRewardlabsModelEntityConfig extends KModelEntityRow
     const PAYOUT_RUN_DATE_ID   = 6;
 
     CONST PAYOUT_MIN_AMOUNT_NAME = 'payout_min_amount';
+    CONST PAYOUT_MAX_AMOUNT_NAME = 'payout_max_amount';
     CONST PAYOUT_MIN_AMOUNT_ID   = 7;
 
 

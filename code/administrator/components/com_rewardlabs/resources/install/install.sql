@@ -1725,7 +1725,8 @@ VALUES
   (5,'qbo_production','{\r\n    \"ACCOUNT_INVENTORY_ASSET\":\"144\",\r\n    \"ACCOUNT_COGS\":\"143\",\r\n    \"ACCOUNT_SALES_INCOME\":\"142\",\r\n\r\n    \"ACCOUNT_ONLINE_PAYMENTS\":\"157\",\r\n    \"ACCOUNT_COD_PAYMENTS\":\"156\",\r\n\r\n    \"ACCOUNT_CHECKING_REF\":\"154\",\r\n    \"ACCOUNT_UNDEPOSITED_REF\":\"105\",\r\n\r\n    \"ACCOUNT_INCOME_SHIPPING\":\"SHIPPING_ITEM_ID\",\r\n\r\n    \"ACCOUNT_INDIRECT_REFERRAL_EXPENSE\":\"152\",\r\n    \"ACCOUNT_INDIRECT_REFERRAL_LIABILITY\":\"148\",\r\n\r\n    \"ACCOUNT_REBATES_EXPENSE\":\"153\",\r\n    \"ACCOUNT_REBATES_LIABILITY\":\"149\",\r\n\r\n    \"ACCOUNT_DIRECT_REFERRAL_EXPENSE\":\"151\",\r\n    \"ACCOUNT_DIRECT_REFERRAL_LIABILITY\":\"147\",\r\n\r\n    \"ACCOUNT_CHARGES_EXPENSE\":\"150\",\r\n    \"ACCOUNT_CHARGES_LIABILITY\":\"146\",\r\n\r\n    \"STORE_ANGONO\":\"1\",\r\n    \"UNILEVEL_COUNT\":\"20\",\r\n\r\n    \"CONFIG_ONLINE_PURCHASE_ENABLED\":true\r\n}'),
   (6,'payout_run_date','2017-09-10'),
   (7,'payout_min_amount','5'),
-  (8,'woocommerce_webhook_secret','pass');
+  (8,'woocommerce_webhook_secret','pass'),
+  (9,'payout_max_amount','200000');
 
 /*!40000 ALTER TABLE `#__rewardlabs_configs` ENABLE KEYS */;
 UNLOCK TABLES;
