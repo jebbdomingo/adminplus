@@ -51,7 +51,6 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
      * Hook to after add event
      *
      * @param KControllerContext $context
-     *
      * @return void
      */
     protected function _afterAdd(KControllerContext $context)
@@ -60,11 +59,24 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
     }
 
     /**
-     * Encode rebates
+     * Hook to after sync event
      *
+     * @param KControllerContext $context
      * @return void
      */
-    public function encode($order)
+    protected function _afterSync(KControllerContext $context)
+    {
+        $this->encode($context->result, true);
+    }
+
+    /**
+     * Encode rebates
+     *
+     * @param  KModelEntityInterface $order
+     * @param  boolean               $resync [optional]
+     * @return void
+     */
+    public function encode($order, $resync = false)
     {
         $accounting = $this->getObject('com://site/rewardlabs.accounting.journal');
 
@@ -72,15 +84,18 @@ class ComRewardlabsControllerBehaviorRebatable extends KControllerBehaviorAbstra
 
         foreach ($items as $item)
         {
-            // Record rebates
-            $data = array(
-                'item'    => $item->id,
-                'account' => $order->_account_number,
-                'type'    => 'rebates',
-                'points'  => $item->rebates * $item->quantity,
-            );
-            $reward = $this->_model->create($data);
-            $reward->save();
+            if (!$resync)
+            {
+                // Record rebates
+                $data = array(
+                    'item'    => $item->id,
+                    'account' => $order->_account_number,
+                    'type'    => 'rebates',
+                    'points'  => $item->rebates * $item->quantity,
+                );
+                $reward = $this->_model->create($data);
+                $reward->save();
+            }
 
             // Post rebates allocation to accounting system
             $accounting->recordRebatesExpense($item->id, $item->rebates * $item->quantity);

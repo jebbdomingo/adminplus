@@ -52,13 +52,13 @@ class ComRewardlabsModelEntityOrder extends KModelEntityRow
 
         switch ($account->status)
         {
-            case ComRewardlabsModelEntityAccount::STATUS_NEW:
-            case ComRewardlabsModelEntityAccount::STATUS_PENDING:
+            case 'new':
+            case 'pending':
                 $this->setStatusMessage($this->getObject('translator')->translate('Unable to place order, the account is currently inactive'));
                 return false;
                 break;
 
-            case ComRewardlabsModelEntityAccount::STATUS_TERMINATED:
+            case 'terminated':
                 $this->setStatusMessage($this->getObject('translator')->translate('Unable to place order, the account was terminated'));
                 return false;
                 break;

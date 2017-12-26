@@ -40,7 +40,7 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         $data = $this->getObject('com://site/rewardlabs.accounting.data');
 
         $config->append(array(
-            'department_ref'          => $data->store_angono,
+            'department_ref'          => $data->STORE_ANGONO,
             'online_payments_account' => $data->ACCOUNT_ONLINE_PAYMENTS, // Online payment processor account
             'cod_payments_account'    => $data->ACCOUNT_COD_PAYMENTS, // COD payment processor account
             'undeposited_account_ref' => $data->ACCOUNT_UNDEPOSITED_REF, // Undeposited Funds Account
@@ -54,7 +54,6 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
      * Record sales transaction in the accounting system 
      *
      * @param KControllerContext $context
-     *
      * @return void
      */
     protected function _afterAdd(KControllerContext $context)
@@ -133,5 +132,16 @@ class ComRewardlabsControllerBehaviorAccountable extends KControllerBehaviorAbst
         $id = $this->getObject('com://admin/qbsync.service.salesreceipt')->create($salesreceipt);
         $order->SalesReceiptRef = $id;
         $order->save();
+    }
+
+    /**
+     * Sync sales transaction in the accounting system 
+     *
+     * @param KControllerContext $context
+     * @return void
+     */
+    protected function _afterSync(KControllerContext $context)
+    {
+        $this->_afterAdd($context);
     }
 }

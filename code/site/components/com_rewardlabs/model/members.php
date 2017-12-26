@@ -41,7 +41,6 @@ class ComRewardlabsModelMembers extends KModelDatabase
             ->columns(array('_account_postal_code'         => '_account.postal_code'))
             ->columns(array('city_id'                      => '_account.city'))
             ->columns(array('city'                         => "_city.name"))
-            ->columns(array('province'                     => "_province.name"))
         ;
     }
 
@@ -50,7 +49,6 @@ class ComRewardlabsModelMembers extends KModelDatabase
         $query
             ->join(array('_account' => 'rewardlabs_accounts'), 'tbl.id = _account.user_id')
             ->join(array('_city' => 'rewardlabs_cities'), '_account.city = _city.rewardlabs_city_id')
-            ->join(array('_province' => 'rewardlabs_provinces'), '_city.province_id = _province.rewardlabs_province_id')
         ;
 
         parent::_buildQueryJoins($query);

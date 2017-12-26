@@ -26,7 +26,7 @@ defined('KOOWA') or die; ?>
                     <?= helper('grid.sort', array('column' => 'order_status', 'title' => 'Order Status')); ?>
                 </th>
                 <th width="2%" data-hide="phone,tablet">
-                    <?= helper('grid.sort', array('column' => 'invoice_status', 'title' => 'Invoice Status')); ?>
+                    <?= helper('grid.sort', array('column' => 'SalesReceiptRef', 'title' => 'Sync Ref#')); ?>
                 </th>
                 <th width="10%">
                     <?= helper('grid.sort', array('column' => 'name', 'title' => 'Member')); ?>
@@ -55,7 +55,7 @@ defined('KOOWA') or die; ?>
                                 </a>
                             </td>
                             <td><?= helper('labels.orderStatus', array('value' => $order->order_status)) ?></td>
-                            <td><?= $order->invoice_status ?></td>
+                            <td><?= $order->SalesReceiptRef ?></td>
                             <td class="k-table-data--ellipsis">
                                 <a data-k-tooltip='{"container":".k-ui-container","delay":{"show":500,"hide":50}}' data-original-title="<?= translate('View {title}', array('title' => escape($order->name))); ?>" href="<?= route('view=account&id='.$order->account_id); ?>">
                                         <?= escape($order->name); ?>

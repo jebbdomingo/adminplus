@@ -75,10 +75,11 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
      *    )
      * )
      *
-     * @param array $data
+     * @param array   $data
+     * @param boolean $resync
      * @return void
      */
-    public function encode($data)
+    public function encode($data, $resync = false)
     {
 
         foreach ($data['items'] as $item)
@@ -86,14 +87,18 @@ class ComRewardlabsServiceReward extends KControllerBehaviorAbstract
             $quantity = $item['quantity'];
             $points   = $item['drpv'] * $quantity;
 
-            // Record direct referral reward
-            $reward = $this->_model->create(array(
-                'item'    => $item['id'],
-                'account' => $data['referrer'],
-                'type'    => 'direct_referral', // Direct Referral
-                'points'  => $points,
-            ));
-            $reward->save();
+            if (!$resync)
+            {
+                // Record direct referral reward
+                $reward = $this->_model->create(array(
+                    'item'    => $item['id'],
+                    'account' => $data['referrer'],
+                    'type'    => 'direct_referral', // Direct Referral
+                    'points'  => $points,
+                ));
+                
+                $reward->save();
+            }
 
             // Post direct referral reward to accounting system
             $this->_journal->recordDirectReferralExpense($item['id'], $points);

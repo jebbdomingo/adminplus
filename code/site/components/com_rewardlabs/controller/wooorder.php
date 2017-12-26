@@ -48,43 +48,46 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             throw new Exception('Rewards creation aborted - order is not yet completed');
         }
 
-        // Ensure the order is synced once
-        $order = $this->getObject('com://site/rewardlabs.model.orders')->app($app)->app_entity($content->id)->count();
-
-        if ($order) {
-            throw new KControllerExceptionActionFailed("Order {$content->id} already exists");
-        }
-
-        // Validate sponsor id
-        foreach ($content->meta_data as $datum)
+        if ('add' == $action)
         {
-            if ('sponsor_id' == $datum['key'])
-            {
-                $sponsor_id = trim($datum['value']);
+            // Ensure the order is synced once
+            $order = $this->getObject('com://site/rewardlabs.model.orders')->app($app)->app_entity($content->id)->count();
 
-                if (!empty($sponsor_id))
-                {
-                    $account = $this->getObject('com://site/rewardlabs.model.accounts')
-                        ->id($sponsor_id)
-                        ->fetch();
-
-                    if (count($account) == 0) {
-                        throw new KControllerExceptionActionFailed('Invalid sponsor id');
-                    }
-                }
-
-                break;
+            if ($order) {
+                throw new KControllerExceptionActionFailed("Order {$content->id} already exists");
             }
-        }
-        
-        // Ensure order line items are encoded only once to prevent multiple payments of rewards for single order
-        foreach ($content->line_items as $item)
-        {
-            $id      = $item['id'];
-            $rewards = $this->getObject('com://site/rewardlabs.model.rewards')->item($id)->count();
 
-            if ($rewards) {
-                throw new KControllerExceptionActionFailed("Order line item {$id} was already encoded");
+            // Validate sponsor id
+            foreach ($content->meta_data as $datum)
+            {
+                if ('sponsor_id' == $datum['key'])
+                {
+                    $sponsor_id = trim($datum['value']);
+
+                    if (!empty($sponsor_id))
+                    {
+                        $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                            ->id($sponsor_id)
+                            ->fetch();
+
+                        if (count($account) == 0) {
+                            throw new KControllerExceptionActionFailed('Invalid sponsor id');
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            // Ensure order line items are encoded only once to prevent multiple payments of rewards for single order
+            foreach ($content->line_items as $item)
+            {
+                $id      = $item['id'];
+                $rewards = $this->getObject('com://site/rewardlabs.model.rewards')->item($id)->count();
+
+                if ($rewards) {
+                    throw new KControllerExceptionActionFailed("Order line item {$id} was already encoded");
+                }
             }
         }
 
@@ -95,7 +98,6 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
     {
         $request = $context->request;
         $app     = $request->query->get('app', 'cmd');
-        $action  = $request->query->get('action', 'cmd');
         $content = $request->data ? $request->data : json_decode($request->getContent());
         
         $data = array(
@@ -155,6 +157,16 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             $order->calculate()->save();
         }
         else throw new KControllerExceptionActionFailed($order->getStatusMessage());
+
+        return $order;
+    }
+
+    protected function _actionSync(KControllerContextInterface $context)
+    {
+        $request = $context->request;
+        $content = $request->data ? $request->data : json_decode($request->getContent());
+        
+        $order = $this->getObject($this->_model)->id($content->id)->fetch();
 
         return $order;
     }

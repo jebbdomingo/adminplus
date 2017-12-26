@@ -12,25 +12,6 @@
 class ComRewardlabsControllerBehaviorChargeable extends KControllerBehaviorAbstract
 {
     /**
-     * Referral bonus controller.
-     *
-     * @param KObjectIdentifierInterface
-     */
-    protected $_controller;
-
-    /**
-     * Constructor.
-     *
-     * @param KObjectConfig $config Configuration options.
-     */
-    public function __construct(KObjectConfig $config)
-    {
-        parent::__construct($config);
-
-        $this->_controller = $this->getObject($config->controller);
-    }
-
-    /**
      * Initializes the options for the object.
      *
      * Called from {@link __construct()} as a first step of object instantiation.
@@ -40,8 +21,7 @@ class ComRewardlabsControllerBehaviorChargeable extends KControllerBehaviorAbstr
     protected function _initialize(KObjectConfig $config)
     {
         $config->append(array(
-            'priority'   => static::PRIORITY_LOW, // low priority so that rewardable runs first
-            'controller' => 'com://site/rewardlabs.controller.rewards',
+            'priority' => static::PRIORITY_LOW, // low priority so that rewardable runs first
         ));
 
         parent::_initialize($config);
@@ -55,6 +35,18 @@ class ComRewardlabsControllerBehaviorChargeable extends KControllerBehaviorAbstr
      * @return void
      */
     protected function _afterAdd(KControllerContext $context)
+    {
+        $this->encode($context->result);
+    }
+
+    /**
+     * Hook to after sync event
+     *
+     * @param KControllerContext $context
+     *
+     * @return void
+     */
+    protected function _afterSync(KControllerContext $context)
     {
         $this->encode($context->result);
     }

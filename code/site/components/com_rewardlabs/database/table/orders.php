@@ -16,10 +16,6 @@ class ComRewardlabsDatabaseTableOrders extends KDatabaseTableAbstract
             'behaviors' => array(
                 'modifiable',
                 'creatable',
-                'processable',
-                'shippable',
-                'locatable',
-                'com://admin/dragonpay.database.behavior.onlinepayable',
             ),
             'filters' => array(
             )

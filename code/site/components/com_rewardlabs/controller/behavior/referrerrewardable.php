@@ -31,7 +31,6 @@ class ComRewardlabsControllerBehaviorReferrerrewardable extends KControllerBehav
      * Hook to after add event
      *
      * @param KControllerContext $context
-     *
      * @return void
      */
     protected function _afterAdd(KControllerContext $context)
@@ -62,6 +61,39 @@ class ComRewardlabsControllerBehaviorReferrerrewardable extends KControllerBehav
             );
 
             $this->getObject('com://site/rewardlabs.service.reward')->encode($data);
+        }
+    }
+
+    /**
+     * Hook to after sync event
+     *
+     * @param KControllerContext $context
+     * @return void
+     */
+    protected function _afterSync(KControllerContext $context)
+    {
+        $order       = $context->result;
+        $order_items = $order->getOrderItems();
+        $items       = array();
+
+        foreach ($order_items as $item)
+        {
+            $items[] = array(
+                'id'       => $item->id,
+                'drpv'     => $item->drpv,
+                'irpv'     => $item->irpv,
+                'quantity' => $item->quantity
+            );
+        }
+
+        if ($order->_account_sponsor_id)
+        {
+            $data = array(
+                'referrer' => $order->_account_sponsor_id,
+                'items'    => $items,
+            );
+
+            $this->getObject('com://site/rewardlabs.service.reward')->encode($data, true);
         }
     }
 }
