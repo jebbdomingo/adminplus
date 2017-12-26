@@ -29,6 +29,7 @@ class ComRewardlabsModelPayouts extends KModelDatabase
         parent::_buildQueryColumns($query);
 
         $query
+            ->columns(array('_account_bank_name'         => '_account.bank_name'))
             ->columns(array('_account_bank_account'      => '_account.bank_account_number'))
             ->columns(array('_account_bank_account_name' => '_account.bank_account_name'))
             ->columns(array('_account_mobile'            => '_account.mobile'))

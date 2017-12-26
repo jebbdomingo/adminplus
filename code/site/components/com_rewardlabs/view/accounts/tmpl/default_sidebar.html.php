@@ -28,6 +28,11 @@ defined('KOOWA') or die; ?>
                     <a href="<?= route('view=configs') ?>"><?= translate('Configs') ?></a>
                 </li>
             <? endif ?>
+            <? if (object('com://site/rewardlabs.controller.config')->canManage()): ?>
+                <li class="<?= parameters()->view === 'qbsyncconfigs' ? 'k-is-active' : null ?>">
+                    <a href="<?= route('view=qbsyncconfigs') ?>"><?= translate('QBSync') ?></a>
+                </li>
+            <? endif ?>
         </ul>
     </div>
 
