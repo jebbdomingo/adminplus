@@ -88,6 +88,21 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
             
             // Fetch the identifier of the local copy of the entity
             $account = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
+
+            if (empty($app) || !$content->id)
+            {
+                $message = "
+                    action: '{$action}' <br />
+                    app: '{$app}' <br />
+                    id: '{$content->id}' <br />
+                ";
+
+                $this->_sendMail($message);
+                
+                var_dump($message);
+                die('test');
+            }
+
             $request->query->set($this->_identifier_column, $account->user_id);
         }
         elseif ('add' == $action)
@@ -136,5 +151,21 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
         }
 
         $context->request->setData($data);
+    }
+
+    protected function _sendMail($message)
+    {
+        // Send email notification
+        $emailSubject = 'WooCustomer API Controller Error';
+        $emailBody    = $message;
+
+        $config = JFactory::getConfig();
+        $mail   = JFactory::getMailer()->sendMail($config->get('mailfrom'), $config->get('fromname'), 'jebb.domingo@gmail.com', $emailSubject, $emailBody);
+
+
+        // Check for an error.
+        if ($mail !== true) {
+            $this->getContext()->response->addMessage(JText::_('COM_REWARDLABS_PAYOUT_EMAIL_SEND_MAIL_FAILED'), 'error');
+        }
     }
 }

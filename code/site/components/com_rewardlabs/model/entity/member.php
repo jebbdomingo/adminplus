@@ -179,8 +179,6 @@ class ComRewardlabsModelEntityMember extends KModelEntityRow
         $account->city                = $this->city;
         $account->state               = $this->state;
         $account->postal_code         = $this->postal_code;
-        $account->app                 = $this->app;
-        $account->app_entity          = $this->app_entity;
 
         $account->save();
         return $account;
