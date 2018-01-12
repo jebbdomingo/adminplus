@@ -3,7 +3,7 @@
  * Reward Labs
  *
  * @package     Reward Labs
- * @copyright   Copyright (C) 2015 - 2020 Nucleon Plus Co. (http://www.nucleonplus.com)
+ * @copyright   Copyright (C) 2018 Nucleon Plus Co. (http://www.nucleonplus.com)
  * @license     GNU GPLv3 <http://www.gnu.org/licenses/gpl.html>
  * @link        https://github.com/jebbdomingo/nucleonplus for the canonical source repository
  */
@@ -84,11 +84,15 @@ class ComRewardlabsControllerWoocustomer extends ComRewardlabsControllerIntegrat
         // Dynamic column mapping
         if ('edit' == $action)
         {
+            // Fetch the identifier of the local copy of the entity
+            $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                ->app($app)
+                ->app_entity($content->id)
+                ->fetch();
+
+            $data         = array_merge($data, $account->getProperties());
             $data['name'] = "{$content->first_name} {$content->last_name}";
             
-            // Fetch the identifier of the local copy of the entity
-            $account = $this->getObject('com://site/rewardlabs.model.accounts')->app($app)->app_entity($content->id)->fetch();
-
             if (empty($app) || !$content->id)
             {
                 $message = "
