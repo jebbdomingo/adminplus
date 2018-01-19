@@ -45,7 +45,17 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
 
         // Validate status
         if ('completed' != $content->status) {
-            throw new Exception('Rewards creation aborted - order is not yet completed');
+            throw new Exception('Order creation aborted - Order is not yet completed');
+        }
+
+        // Validate customer account
+        $account = $this->getObject('com://site/rewardlabs.model.accounts')
+                    ->app($app)
+                    ->app_entity($content->customer_id)
+                    ->fetch();
+
+        if ($account->isNew()) {
+            throw new Exception("Order creation aborted - Customer #{$content->customer_id} does not exists");
         }
 
         if ('add' == $action)
@@ -54,7 +64,7 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
             $order = $this->getObject('com://site/rewardlabs.model.orders')->app($app)->app_entity($content->id)->count();
 
             if ($order) {
-                throw new KControllerExceptionActionFailed("Order {$content->id} already exists");
+                throw new KControllerExceptionActionFailed("Order creation aborted - Order #{$content->id} already exists");
             }
 
             // Validate sponsor id
@@ -103,7 +113,6 @@ class ComRewardlabsControllerWooorder extends ComRewardlabsControllerIntegration
         $data = array(
             'app'             => $app,
             'app_entity'      => $content->id,
-            'account'         => $content->customer_id,
             'order_status'    => $content->status,
             'invoice_status'  => $content->status,
             'payment_method'  => $content->payment_method,
